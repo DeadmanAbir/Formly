@@ -6,6 +6,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { loadFromStorage, saveToStorage } from "@/lib/helper";
 import { Block, PartialBlock } from "@blocknote/core";
 import { useState, useEffect } from "react";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogDescription,
+	DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { ArrowRight } from "lucide-react";
+import { insertFormFn } from "@/lib/tanstack-query/mutation";
 
 type Props = {
 	params: {
@@ -14,12 +25,24 @@ type Props = {
 };
 
 export default function FormPage({ params }: Props) {
-	// const { slug } = params;
-
 	const [showOptions, setShowOptions] = useState<boolean>(false);
 	const [initialContent, setInitialContent] = useState<
 		PartialBlock[] | undefined
 	>(undefined);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [buttonLabel, setButtonLabel] = useState("Submit");
+
+	const { mutate: insertForm, isPending: isInserting } = insertFormFn(
+		"access_token",
+		{
+			onSuccess: (data: any) => {
+				console.log(data);
+			},
+			onError: (error: unknown) => {
+				console.error(error);
+			},
+		}
+	);
 
 	useEffect(() => {
 		const content = loadFromStorage();
@@ -51,7 +74,16 @@ export default function FormPage({ params }: Props) {
 							className="text-4xl font-light w-full border-none focus:outline-none focus:ring-0 text-gray-400 placeholder:text-gray-400"
 						/>
 					</form>
-					<Button variant="ghost" className="mt-2" onClick={handleHeaderSubmit}>
+					<Button
+						variant="ghost"
+						className="mt-2"
+						onClick={() =>
+							insertForm({
+								content: JSON.stringify(initialContent),
+								userId: "6e51e3e4-8412-4126-97e1-f35176169a11",
+							})
+						}
+					>
 						Save to draft
 					</Button>
 				</div>
@@ -65,9 +97,41 @@ export default function FormPage({ params }: Props) {
 					editable={true}
 				/>
 			)}
-			<Button variant="default" className="mt-2" onClick={handleHeaderSubmit}>
-				Submit
+			<Button
+				variant="default"
+				className="mt-2"
+				onClick={() => setIsModalOpen(true)}
+			>
+				{buttonLabel}
+				<span>
+					<ArrowRight />
+				</span>
 			</Button>
+
+			<Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Change Button Label</DialogTitle>
+						<DialogDescription>
+							Enter a new label for the submit button
+						</DialogDescription>
+					</DialogHeader>
+
+					<form
+						onSubmit={(e) => {
+							e.preventDefault();
+							setIsModalOpen(false);
+						}}
+					>
+						<Input
+							value={buttonLabel}
+							onChange={(e) => setButtonLabel(e.target.value)}
+							placeholder="Enter button label"
+							className="my-4"
+						/>
+					</form>
+				</DialogContent>
+			</Dialog>
 		</div>
 	);
 }
