@@ -51,6 +51,9 @@ export default function FormPage({ params }: Props) {
 							className="text-4xl font-light w-full border-none focus:outline-none focus:ring-0 text-gray-400 placeholder:text-gray-400"
 						/>
 					</form>
+					<Button variant="ghost" className="mt-2" onClick={handleHeaderSubmit}>
+						Save to draft
+					</Button>
 				</div>
 			</div>
 			{showOptions ? (
@@ -62,6 +65,9 @@ export default function FormPage({ params }: Props) {
 					editable={true}
 				/>
 			)}
+			<Button variant="default" className="mt-2" onClick={handleHeaderSubmit}>
+				Submit
+			</Button>
 		</div>
 	);
 }
