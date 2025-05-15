@@ -1,8 +1,11 @@
 "use client";
+import { Editor } from "@/components/forms/dynamic-editor";
 import FormsOptions from "@/components/forms/forms-options";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useState } from "react";
+import { loadFromStorage, saveToStorage } from "@/lib/helper";
+import { Block, PartialBlock } from "@blocknote/core";
+import { useState, useEffect } from "react";
 
 type Props = {
 	params: {
@@ -12,11 +15,28 @@ type Props = {
 
 export default function FormPage({ params }: Props) {
 	// const { slug } = params;
-	const [showOptions, setShowOptions] = useState(true);
+
+	const [showOptions, setShowOptions] = useState<boolean>(false);
+	const [initialContent, setInitialContent] = useState<
+		PartialBlock[] | undefined
+	>(undefined);
+
+	useEffect(() => {
+		const content = loadFromStorage();
+		console.log("content", content);
+		setInitialContent(content);
+	}, []);
+
 	const handleHeaderSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		alert("Form title saved");
-		setShowOptions(!showOptions);
+		if (!showOptions) {
+			console.log(initialContent);
+			alert("check console");
+			saveToStorage(JSON.stringify(initialContent));
+		} else {
+			alert("Form title saved");
+			setShowOptions(!showOptions);
+		}
 	};
 
 	return (
@@ -33,7 +53,15 @@ export default function FormPage({ params }: Props) {
 					</form>
 				</div>
 			</div>
-			{showOptions ? <FormsOptions /> : <h1>Editor...</h1>}
+			{showOptions ? (
+				<FormsOptions />
+			) : (
+				<Editor
+					setContent={setInitialContent}
+					initialContent={initialContent}
+					editable={true}
+				/>
+			)}
 		</div>
 	);
 }
