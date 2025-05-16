@@ -18,6 +18,10 @@ import { Input } from "@/components/ui/input";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { insertFormFn } from "@/lib/tanstack-query/mutation";
 import { FormHeader } from "@/components/forms/form-header";
+import { cn } from "@/lib/utils";
+import { CoverModal } from "@/components/forms/cover-modal";
+import { LogoModal } from "@/components/forms/logo-modal";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type Props = {
 	params: {
@@ -33,8 +37,12 @@ export default function FormPage({ params }: Props) {
 	>(undefined);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [buttonLabel, setButtonLabel] = useState("Submit");
+	const [bgColor, setBgColor] = useState("bg-white");
+	const [showCoverModal, setShowCoverModal] = useState(false);
+	const [showLogoModal, setShowLogoModal] = useState(false);
+	const [logoUrl, setLogoUrl] = useState("");
 
-	const { mutate: insertForm, isPending: isInserting } = insertFormFn(
+	const { mutate: insertForm, isPending: isLoading } = insertFormFn(
 		"access_token",
 		{
 			onSuccess: (data: any) => {
@@ -89,16 +97,80 @@ export default function FormPage({ params }: Props) {
 	}
 
 	return (
-		<div className="container max-w-3xl py-6">
+		<div className="w-full py-6">
 			<FormHeader
 				content={JSON.stringify(initialContent)}
 				userId={"6e51e3e4-8412-4126-97e1-f35176169a11"}
 				onPreview={() => setShowPreview(!showPreview)}
 				onPublish={() => {}}
 			/>
-			<div className="flex flex-col space-y-8">
-				{/* Form Title Input */}
-				<div className="border-l-4 border-gray-200 pl-6">
+
+			{showOptions ? (
+				<FormsOptions />
+			) : (
+				<div className="flex flex-col items-center justify-center h-screen space-y-4">
+					<div className={cn("w-full flex-grow relative group", bgColor)}>
+						<div className="absolute inset-0 flex items-center justify-center  opacity-0 group-hover:opacity-100 transition-opacity">
+							{bgColor === "bg-white" ? (
+								<Button
+									variant="ghost"
+									className="bg-white"
+									onClick={() => setBgColor("bg-rose-100")}
+								>
+									Add cover
+								</Button>
+							) : (
+								<Button
+									variant="ghost"
+									className="bg-white"
+									onClick={() => setShowCoverModal(true)}
+								>
+									Change cover
+								</Button>
+							)}
+							<CoverModal
+								setBgColor={setBgColor}
+								isOpen={showCoverModal}
+								onClose={() => setShowCoverModal(false)}
+							/>
+							<LogoModal
+								isOpen={showLogoModal}
+								onClose={() => setShowLogoModal(false)}
+								onUpload={setLogoUrl}
+								onRemove={() => setLogoUrl("")}
+							/>
+						</div>
+					</div>
+					<div className="flex flex-row">
+						{logoUrl ? (
+							<Avatar
+								className="h-16 w-16 cursor-pointer"
+								onClick={() => setShowLogoModal(true)}
+							>
+								<AvatarImage src={logoUrl} />
+								<AvatarFallback>Logo</AvatarFallback>
+							</Avatar>
+						) : (
+							<Button
+								variant="ghost"
+								className="bg-white text-black px-4 py-2 rounded"
+								onClick={() =>
+									setLogoUrl(
+										"https://avatars.githubusercontent.com/u/124599?v=4"
+									)
+								}
+							>
+								Add logo
+							</Button>
+						)}
+
+						<Button
+							variant="ghost"
+							className="bg-white text-black px-4 py-2 rounded"
+						>
+							Customize
+						</Button>
+					</div>
 					<form onSubmit={handleHeaderSubmit}>
 						<input
 							type="text"
@@ -106,28 +178,12 @@ export default function FormPage({ params }: Props) {
 							className="text-4xl font-light w-full border-none focus:outline-none focus:ring-0 text-gray-400 placeholder:text-gray-400"
 						/>
 					</form>
-					<Button
-						variant="ghost"
-						className="mt-2"
-						onClick={() =>
-							insertForm({
-								content: JSON.stringify(initialContent),
-								userId: "6e51e3e4-8412-4126-97e1-f35176169a11",
-							})
-						}
-					>
-						Save to draft
-					</Button>
+					<Editor
+						setContent={setInitialContent}
+						initialContent={initialContent}
+						editable={true}
+					/>
 				</div>
-			</div>
-			{showOptions ? (
-				<FormsOptions />
-			) : (
-				<Editor
-					setContent={setInitialContent}
-					initialContent={initialContent}
-					editable={true}
-				/>
 			)}
 			<Button
 				variant="default"

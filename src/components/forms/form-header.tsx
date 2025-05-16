@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { saveToStorage } from "@/lib/helper";
 import { insertFormFn } from "@/lib/tanstack-query/mutation";
 import { Settings } from "lucide-react";
 
@@ -32,7 +33,16 @@ export function FormHeader({
 	return (
 		<div className="flex items-center justify-between border-b pb-4">
 			<div className="flex items-center gap-4">
-				<span className="text-sm text-muted-foreground">Draft</span>
+				<Button
+					variant="ghost"
+					className="text-sm text-muted-foreground"
+					onClick={() => {
+						alert("check console");
+						saveToStorage(content);
+					}}
+				>
+					Draft
+				</Button>
 				<Button variant="ghost" size="icon" className="h-8 w-8">
 					<Settings className="h-4 w-4" />
 				</Button>
