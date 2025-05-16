@@ -1,6 +1,7 @@
 "use client";
 
 import { fetchFormsQuery } from "@/lib/tanstack-query/query";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, Pencil } from "lucide-react";
 import {
@@ -11,10 +12,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 
-export const FormsPage = () => {
+interface FormsPageProps {
+	onEmpty?: () => void;
+}
+
+export const FormsPage: React.FC<FormsPageProps> = ({ onEmpty }) => {
 	const { data: postsData, isPending } = fetchFormsQuery(
 		"6e51e3e4-8412-4126-97e1-f35176169a11"
 	);
+
+	// Notify parent if data is loaded and empty
+	useEffect(() => {
+		if (!isPending && Array.isArray(postsData) && postsData.length === 0) {
+			onEmpty?.();
+		}
+	}, [isPending, postsData, onEmpty]);
 
 	if (isPending) {
 		return (
@@ -24,7 +36,8 @@ export const FormsPage = () => {
 		);
 	}
 
-	if (!postsData) {
+	// Render nothing if no data
+	if (!postsData || postsData.length === 0) {
 		return null;
 	}
 
