@@ -1,35 +1,27 @@
 "use client";
-import { Editor } from "@/components/forms/dynamic-editor";
-import FormsOptions from "@/components/forms/forms-options";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { loadFromStorage, saveToStorage } from "@/lib/helper";
-import { Block, PartialBlock } from "@blocknote/core";
-import { useState, useEffect } from "react";
+import { insertFormFn } from "@/lib/tanstack-query/mutation";
+import { PartialBlock } from "@blocknote/core";
+import { useEffect, useState } from "react";
+import { Button } from "../ui/button";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { FormHeader } from "./form-header";
+import FormsOptions from "./forms-options";
+import { cn } from "@/lib/utils";
+import { CoverModal } from "./cover-modal";
+import { LogoModal } from "./logo-modal";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
 	DialogHeader,
 	DialogTitle,
-	DialogDescription,
-	DialogFooter,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import { insertFormFn } from "@/lib/tanstack-query/mutation";
-import { FormHeader } from "@/components/forms/form-header";
-import { cn } from "@/lib/utils";
-import { CoverModal } from "@/components/forms/cover-modal";
-import { LogoModal } from "@/components/forms/logo-modal";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+} from "../ui/dialog";
+import { Input } from "../ui/input";
+import { Editor } from "./dynamic-editor";
 
-type Props = {
-	params: {
-		slug: string;
-	};
-};
-
-export default function FormPage({ params }: Props) {
+const EditForm = () => {
 	const [showOptions, setShowOptions] = useState<boolean>(false);
 	const [showPreview, setShowPreview] = useState<boolean>(false);
 	const [initialContent, setInitialContent] = useState<
@@ -74,7 +66,7 @@ export default function FormPage({ params }: Props) {
 
 	if (showPreview) {
 		return (
-			<div>
+			<div className="w-screen">
 				<div className="flex flex-col h-screen">
 					<div className="flex justify-end p-4">
 						<Button
@@ -222,4 +214,6 @@ export default function FormPage({ params }: Props) {
 			</Dialog>
 		</div>
 	);
-}
+};
+
+export default EditForm;

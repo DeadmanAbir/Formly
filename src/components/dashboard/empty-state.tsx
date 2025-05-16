@@ -30,7 +30,7 @@ const EmptyState = () => {
 			</p>
 
 			{/* New form button */}
-			<Link href="/forms/new">
+			<Link href={`/forms/${crypto.randomUUID()}/edit`}>
 				<Button
 					variant="default"
 					size="default"

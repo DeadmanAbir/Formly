@@ -8,7 +8,7 @@ export default function DashboardPage() {
 
 	return (
 		<div className="flex flex-col items-center justify-center min-h-screen max-w-md mx-auto px-4">
-			{!isEmpty ? (
+			{isEmpty ? (
 				<FormsPage onEmpty={() => setIsEmpty(true)} />
 			) : (
 				<EmptyState />
