@@ -15,8 +15,9 @@ import {
 	DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { insertFormFn } from "@/lib/tanstack-query/mutation";
+import { FormHeader } from "@/components/forms/form-header";
 
 type Props = {
 	params: {
@@ -26,6 +27,7 @@ type Props = {
 
 export default function FormPage({ params }: Props) {
 	const [showOptions, setShowOptions] = useState<boolean>(false);
+	const [showPreview, setShowPreview] = useState<boolean>(false);
 	const [initialContent, setInitialContent] = useState<
 		PartialBlock[] | undefined
 	>(undefined);
@@ -62,8 +64,38 @@ export default function FormPage({ params }: Props) {
 		}
 	};
 
+	if (showPreview) {
+		return (
+			<div>
+				<div className="flex flex-col h-screen">
+					<div className="flex justify-end p-4">
+						<Button
+							variant="ghost"
+							className="text-sm"
+							onClick={() => setShowPreview(!showPreview)}
+						>
+							<span>
+								<ArrowLeft />
+							</span>
+							Back to editor
+						</Button>
+					</div>
+					<div className="flex flex-1 items-center justify-center">
+						<h1>This is the preview page</h1>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
 	return (
 		<div className="container max-w-3xl py-6">
+			<FormHeader
+				content={JSON.stringify(initialContent)}
+				userId={"6e51e3e4-8412-4126-97e1-f35176169a11"}
+				onPreview={() => setShowPreview(!showPreview)}
+				onPublish={() => {}}
+			/>
 			<div className="flex flex-col space-y-8">
 				{/* Form Title Input */}
 				<div className="border-l-4 border-gray-200 pl-6">
