@@ -4,9 +4,13 @@ import { insertPost } from "../api";
   
 
 interface FormDetail {
-    content: string;
     userId: string;
-    formId: string;
+    data: {
+      content: string;
+      title: string;
+      buttonLabel: string;
+      formId: string;
+    };
 }
 
 

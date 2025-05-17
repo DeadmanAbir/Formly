@@ -6,16 +6,19 @@ import { insertFormFn } from "@/lib/tanstack-query/mutation";
 import { Settings } from "lucide-react";
 
 interface FormHeaderProps {
-	content: string;
-	formId: string;
 	userId: string;
 	onPreview?: () => void;
 	onPublish?: () => void;
+	data: {
+		content: string;
+		title: string;
+		buttonLabel: string;
+		formId: string;
+	};
 }
 
 export function FormHeader({
-	content,
-	formId,
+	data,
 	userId,
 	onPreview,
 	onPublish,
@@ -40,7 +43,7 @@ export function FormHeader({
 					className="text-sm text-muted-foreground"
 					onClick={() => {
 						alert("check console");
-						saveToStorage(content);
+						saveToStorage(data.content);
 					}}
 				>
 					Draft
@@ -59,7 +62,17 @@ export function FormHeader({
 				<Button
 					variant="default"
 					className="bg-blue-600 text-sm"
-					onClick={() => insertForm({ content, userId, formId })}
+					onClick={() =>
+						insertForm({
+							data: {
+								content: data.content,
+								title: data.title,
+								buttonLabel: data.buttonLabel,
+								formId: data.formId,
+							},
+							userId,
+						})
+					}
 				>
 					Publish
 				</Button>

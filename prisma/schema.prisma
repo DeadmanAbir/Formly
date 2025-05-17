@@ -7,16 +7,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id     String  @id @default(uuid())
-  email  String  @unique
-  forms  Form[]  @relation
+  id    String @id @default(uuid())
+  email String @unique
+  forms Form[] @relation
 }
 
 model Form {
-  id        String @id
-  content   String
-  userId    String
-  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id          String   @id
+  content     String
+  userId      String
+  title       String?
+  buttonLabel String   @default("Submit")
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

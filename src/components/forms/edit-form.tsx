@@ -22,6 +22,7 @@ import { Editor } from "./dynamic-editor";
 
 const EditForm = ({ uuid }: { uuid: string }) => {
 	const [showOptions, setShowOptions] = useState<boolean>(false);
+	const [title, setTitle] = useState<string>("");
 	const [showPreview, setShowPreview] = useState<boolean>(false);
 	const [initialContent, setInitialContent] = useState<
 		PartialBlock[] | undefined
@@ -32,6 +33,13 @@ const EditForm = ({ uuid }: { uuid: string }) => {
 	const [showCoverModal, setShowCoverModal] = useState(false);
 	const [showLogoModal, setShowLogoModal] = useState(false);
 	const [logoUrl, setLogoUrl] = useState("");
+
+	const data = {
+		content: JSON.stringify(initialContent),
+		title: title,
+		buttonLabel: buttonLabel,
+		formId: uuid,
+	};
 
 	useEffect(() => {
 		const content = loadFromStorage();
@@ -53,9 +61,9 @@ const EditForm = ({ uuid }: { uuid: string }) => {
 
 	if (showPreview) {
 		return (
-			<div className="w-screen">
-				<div className="flex flex-col h-screen">
-					<div className="flex justify-end p-4">
+			<div className="w-full">
+				<div className="flex flex-col  h-screen">
+					<div className="flex justify-end  p-4">
 						<Button
 							variant="ghost"
 							className="text-sm"
@@ -78,8 +86,7 @@ const EditForm = ({ uuid }: { uuid: string }) => {
 	return (
 		<div className="w-full py-6">
 			<FormHeader
-				content={JSON.stringify(initialContent)}
-				formId={uuid}
+				data={data}
 				userId={"6e51e3e4-8412-4126-97e1-f35176169a11"}
 				onPreview={() => setShowPreview(!showPreview)}
 				onPublish={() => {}}
@@ -152,9 +159,10 @@ const EditForm = ({ uuid }: { uuid: string }) => {
 						</Button>
 					</div>
 					<form onSubmit={handleHeaderSubmit}>
-						<input
+						<Input
 							type="text"
 							placeholder="Form title"
+							onChange={(e) => setTitle(e.target.value)}
 							className="text-4xl font-light w-full border-none focus:outline-none focus:ring-0 text-gray-400 placeholder:text-gray-400"
 						/>
 					</form>

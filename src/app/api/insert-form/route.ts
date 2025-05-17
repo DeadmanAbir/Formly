@@ -5,8 +5,7 @@ export async function POST(request: NextRequest) {
 	const prisma = new PrismaClient();
 	try {
 		const body = await request.json();
-		const { content, userId, formId } = body;
-
+		const { content, userId, formId, title, buttonLabel } = body;
 		const existingForm = await prisma.form.findUnique({
 			where: { id: formId },
 		});
@@ -28,6 +27,8 @@ export async function POST(request: NextRequest) {
 				id: formId,
 				content,
 				userId,
+				title,
+				buttonLabel,
 			},
 		});
 		return NextResponse.json({ success: true, data });

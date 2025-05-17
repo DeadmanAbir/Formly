@@ -1,7 +1,11 @@
 interface FormDetail {
-	content: string;
 	userId: string;
-	formId: string;
+	data: {
+		content: string;
+		title: string;
+		buttonLabel: string;
+		formId: string;
+	  };
 }
 
 export const insertPost = async (accessToken: string, details: FormDetail) => {
@@ -12,7 +16,13 @@ export const insertPost = async (accessToken: string, details: FormDetail) => {
 			//     'Content-Type': 'application/json',
 			//     Authorization: `Bearer ${accessToken}`,
 			//   },
-			body: JSON.stringify(details),
+			body: JSON.stringify({
+				userId: details.userId,
+				content: details.data.content,
+				title: details.data.title,
+				buttonLabel: details.data.buttonLabel,
+				formId: details.data.formId,
+			}),
 		});
 
 		if (!response.ok) {
