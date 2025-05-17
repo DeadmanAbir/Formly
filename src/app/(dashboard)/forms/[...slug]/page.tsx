@@ -11,9 +11,9 @@ type Props = {
 
 export default function FormPage({ params }: Props) {
 	const { slug } = use(params);
-	console.log(slug);
+	console.log(slug[0]);
 	if (slug[1] === "edit") {
-		return <EditForm />;
+		return <EditForm uuid={slug[0]} />;
 	} else if (slug[1] === "share") {
 		return <ShareForm />;
 	}

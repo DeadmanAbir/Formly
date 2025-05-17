@@ -1,6 +1,5 @@
 "use client";
 import { loadFromStorage, saveToStorage } from "@/lib/helper";
-import { insertFormFn } from "@/lib/tanstack-query/mutation";
 import { PartialBlock } from "@blocknote/core";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
@@ -21,7 +20,7 @@ import {
 import { Input } from "../ui/input";
 import { Editor } from "./dynamic-editor";
 
-const EditForm = () => {
+const EditForm = ({ uuid }: { uuid: string }) => {
 	const [showOptions, setShowOptions] = useState<boolean>(false);
 	const [showPreview, setShowPreview] = useState<boolean>(false);
 	const [initialContent, setInitialContent] = useState<
@@ -33,18 +32,6 @@ const EditForm = () => {
 	const [showCoverModal, setShowCoverModal] = useState(false);
 	const [showLogoModal, setShowLogoModal] = useState(false);
 	const [logoUrl, setLogoUrl] = useState("");
-
-	const { mutate: insertForm, isPending: isLoading } = insertFormFn(
-		"access_token",
-		{
-			onSuccess: (data: any) => {
-				console.log(data);
-			},
-			onError: (error: unknown) => {
-				console.error(error);
-			},
-		}
-	);
 
 	useEffect(() => {
 		const content = loadFromStorage();
@@ -92,6 +79,7 @@ const EditForm = () => {
 		<div className="w-full py-6">
 			<FormHeader
 				content={JSON.stringify(initialContent)}
+				formId={uuid}
 				userId={"6e51e3e4-8412-4126-97e1-f35176169a11"}
 				onPreview={() => setShowPreview(!showPreview)}
 				onPublish={() => {}}

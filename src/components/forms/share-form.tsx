@@ -4,8 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Copy } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export default function ShareForm() {
+	const pathname = usePathname();
+	const url = window.location.origin;
 	return (
 		<div className="flex justify-center items-center h-screen ">
 			<div className="container max-w-6xl pt-10">
@@ -29,7 +32,7 @@ export default function ShareForm() {
 
 							<div className="flex gap-2">
 								<Input
-									value="https://tally.so/r/nPyOB1"
+									value={`${url}/r/${pathname.split("/").slice(-2, -1)[0]}`}
 									readOnly
 									className="flex-1"
 								/>

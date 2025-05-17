@@ -6,6 +6,7 @@ import { insertPost } from "../api";
 interface FormDetail {
     content: string;
     userId: string;
+    formId: string;
 }
 
 

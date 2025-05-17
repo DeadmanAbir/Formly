@@ -7,6 +7,7 @@ import { Settings } from "lucide-react";
 
 interface FormHeaderProps {
 	content: string;
+	formId: string;
 	userId: string;
 	onPreview?: () => void;
 	onPublish?: () => void;
@@ -14,6 +15,7 @@ interface FormHeaderProps {
 
 export function FormHeader({
 	content,
+	formId,
 	userId,
 	onPreview,
 	onPublish,
@@ -57,7 +59,7 @@ export function FormHeader({
 				<Button
 					variant="default"
 					className="bg-blue-600 text-sm"
-					onClick={() => insertForm({ content, userId })}
+					onClick={() => insertForm({ content, userId, formId })}
 				>
 					Publish
 				</Button>

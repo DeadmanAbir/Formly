@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "../ui/button";
 
-const EmptyState = () => {
+const EmptyState = ({ uuid }: { uuid: string }) => {
 	return (
 		<div className="text-center space-y-6">
 			{/* Illustration */}
@@ -30,7 +30,7 @@ const EmptyState = () => {
 			</p>
 
 			{/* New form button */}
-			<Link href={`/forms/${crypto.randomUUID()}/edit`}>
+			<Link href={`/forms/${uuid}/edit`}>
 				<Button
 					variant="default"
 					size="default"

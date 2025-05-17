@@ -1,6 +1,7 @@
 interface FormDetail {
 	content: string;
 	userId: string;
+	formId: string;
 }
 
 export const insertPost = async (accessToken: string, details: FormDetail) => {

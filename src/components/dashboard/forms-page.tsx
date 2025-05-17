@@ -11,48 +11,33 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface FormsPageProps {
-	onEmpty?: () => void;
+	formsData: any;
+	uuid: string;
 }
 
-export const FormsPage: React.FC<FormsPageProps> = ({ onEmpty }) => {
-	const { data: postsData, isPending } = fetchFormsQuery(
-		"6e51e3e4-8412-4126-97e1-f35176169a11"
-	);
-
-	// Notify parent if data is loaded and empty
-	useEffect(() => {
-		if (!isPending && Array.isArray(postsData) && postsData.length === 0) {
-			onEmpty?.();
-		}
-	}, [isPending, postsData, onEmpty]);
-
-	if (isPending) {
-		return (
-			<div className="flex flex-col items-center justify-center min-h-screen max-w-md mx-auto px-4">
-				<h1>Loading........</h1>
-			</div>
-		);
-	}
-
-	// Render nothing if no data
-	if (!postsData || postsData.length === 0) {
-		return null;
-	}
-
+export const FormsPage: React.FC<FormsPageProps> = ({ formsData, uuid }) => {
+	const router = useRouter();
 	return (
 		<div className="w-full space-y-4">
 			<div className="flex items-center justify-between">
 				<h1 className="text-2xl font-bold">Home</h1>
 				<div className="flex items-center gap-2">
 					<Button variant="outline">New workspace</Button>
-					<Button>New form</Button>
+					<Button
+						onClick={() => {
+							router.push(`/forms/${uuid}/edit`);
+						}}
+					>
+						New form
+					</Button>
 				</div>
 			</div>
 
 			<div className="grid gap-4">
-				{postsData.map((form: any) => (
+				{formsData.map((form: any) => (
 					<div
 						key={form.id}
 						className="flex items-center justify-between border rounded-lg p-4"

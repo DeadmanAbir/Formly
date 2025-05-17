@@ -4,9 +4,8 @@ import { Input } from "./ui/input";
 import { usePathname } from "next/navigation";
 export const DashboardHeader = () => {
 	const pathname = usePathname();
-	const isFormsPage = pathname === "/forms" || pathname.startsWith("/forms/");
-
-	if (isFormsPage) {
+	const isEditPage = pathname.split("/").pop() === "edit";
+	if (isEditPage) {
 		return null;
 	}
 
