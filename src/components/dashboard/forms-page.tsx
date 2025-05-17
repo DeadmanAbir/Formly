@@ -1,7 +1,5 @@
 "use client";
 
-import { fetchFormsQuery } from "@/lib/tanstack-query/query";
-import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, Pencil } from "lucide-react";
 import {
@@ -42,22 +40,29 @@ export const FormsPage: React.FC<FormsPageProps> = ({ formsData, uuid }) => {
 						key={form.id}
 						className="flex items-center justify-between border rounded-lg p-4"
 					>
-						<div className="space-y-1">
-							<div className="flex items-center gap-2">
-								<h2 className="text-lg font-medium">Untitled</h2>
-								<span className="text-sm text-muted-foreground">Draft</span>
+						<Link href={`/r/${form.id}`} className="flex-1">
+							<div className="space-y-1">
+								<div className="flex items-center gap-2">
+									<h2 className="text-lg font-medium">Untitled</h2>
+									<span className="text-sm text-muted-foreground">Draft</span>
+								</div>
+								<p className="text-sm text-muted-foreground">
+									Edited {new Date(form.created_at).toLocaleDateString()}
+								</p>
 							</div>
-							<p className="text-sm text-muted-foreground">
-								Edited {new Date(form.created_at).toLocaleDateString()}
-							</p>
-						</div>
+						</Link>
 
 						<div className="flex items-center gap-2">
-							<Link href={`/forms/${form.id}`}>
-								<Button variant="ghost" size="icon">
-									<Pencil className="h-4 w-4" />
-								</Button>
-							</Link>
+							<Button
+								variant="ghost"
+								size="icon"
+								onClick={(event) => {
+									event.stopPropagation();
+									router.push(`/forms/${form.id}/edit`);
+								}}
+							>
+								<Pencil className="h-4 w-4" />
+							</Button>
 							<DropdownMenu>
 								<DropdownMenuTrigger asChild>
 									<Button variant="ghost" size="icon">

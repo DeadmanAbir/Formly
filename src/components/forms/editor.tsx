@@ -11,7 +11,7 @@ import { Dispatch, SetStateAction, useMemo } from "react";
 import { PartialBlock } from "@blocknote/core";
 
 interface EditorProps {
-	setContent: Dispatch<SetStateAction<PartialBlock[] | undefined>>;
+	setContent?: Dispatch<SetStateAction<PartialBlock[] | undefined>>;
 	initialContent?: PartialBlock[];
 	editable?: boolean;
 }
@@ -48,7 +48,7 @@ const Editor = ({
 		<BlockNoteView
 			editable={editable}
 			editor={editor}
-			onChange={() => setContent(editor.document)}
+			onChange={() => setContent?.(editor.document)}
 			theme={resolvedTheme === "dark" ? "dark" : "light"}
 			shadCNComponents={{ Input, Button }}
 		/>

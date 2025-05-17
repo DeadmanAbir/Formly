@@ -3,12 +3,28 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Copy } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 export default function ShareForm() {
 	const pathname = usePathname();
+	const [copied, setCopied] = useState(false);
 	const url = window.location.origin;
+
+	const handleCopy = () => {
+		const inputValue = `${url}/r/${pathname.split("/").slice(-2, -1)[0]}`;
+		navigator.clipboard
+			.writeText(inputValue)
+			.then(() => {
+				setCopied(true);
+				setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+			})
+			.catch((err) => {
+				console.error("Could not copy text: ", err);
+			});
+	};
+
 	return (
 		<div className="flex justify-center items-center h-screen ">
 			<div className="container max-w-6xl pt-10">
@@ -36,9 +52,17 @@ export default function ShareForm() {
 									readOnly
 									className="flex-1"
 								/>
-								<Button variant="default" className="flex gap-2">
-									<Copy className="h-4 w-4" />
-									Copy
+								<Button
+									variant="default"
+									className="flex gap-2"
+									onClick={handleCopy}
+								>
+									{copied ? (
+										<Check className="h-4 w-4" />
+									) : (
+										<Copy className="h-4 w-4" />
+									)}
+									{copied ? "Copied" : "Copy"}
 								</Button>
 							</div>
 

@@ -29,7 +29,7 @@ export const insertPost = async (accessToken: string, details: FormDetail) => {
 
 export const fetchUserForms = async (accessToken: string) => {
 	try {
-		const response = await fetch(`/api/get-form`, {
+		const response = await fetch(`/api/get-forms`, {
 			method: "GET",
 			  headers: {
 			    'Content-Type': 'application/json',
