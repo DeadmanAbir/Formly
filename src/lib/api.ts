@@ -5,6 +5,8 @@ interface FormDetail {
 		title: string;
 		buttonLabel: string;
 		formId: string;
+		bgColor: string;
+		logoUrl: string;
 	  };
 }
 
@@ -22,6 +24,8 @@ export const insertPost = async (accessToken: string, details: FormDetail) => {
 				title: details.data.title,
 				buttonLabel: details.data.buttonLabel,
 				formId: details.data.formId,
+				bgColor: details.data.bgColor,
+				logoUrl: details.data.logoUrl,
 			}),
 		});
 

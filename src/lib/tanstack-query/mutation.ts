@@ -10,6 +10,8 @@ interface FormDetail {
       title: string;
       buttonLabel: string;
       formId: string;
+      bgColor: string;
+      logoUrl: string;
     };
 }
 

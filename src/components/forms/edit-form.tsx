@@ -39,6 +39,8 @@ const EditForm = ({ uuid }: { uuid: string }) => {
 		title: title,
 		buttonLabel: buttonLabel,
 		formId: uuid,
+		bgColor: bgColor,
+		logoUrl: logoUrl,
 	};
 
 	useEffect(() => {

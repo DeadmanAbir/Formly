@@ -19,6 +19,9 @@ model Form {
   userId      String
   title       String?
   buttonLabel String   @default("Submit")
+  bgColor     String   @default("bg-white")
+  logoUrl     String?
+  published   Boolean  @default(false)
   createdAt   DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

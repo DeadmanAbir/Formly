@@ -14,6 +14,8 @@ interface FormHeaderProps {
 		title: string;
 		buttonLabel: string;
 		formId: string;
+		bgColor: string;
+		logoUrl: string;
 	};
 }
 
@@ -69,6 +71,8 @@ export function FormHeader({
 								title: data.title,
 								buttonLabel: data.buttonLabel,
 								formId: data.formId,
+								bgColor: data.bgColor,
+								logoUrl: data.logoUrl,
 							},
 							userId,
 						})
