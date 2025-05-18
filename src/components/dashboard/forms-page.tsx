@@ -18,6 +18,7 @@ interface FormsPageProps {
 
 export const FormsPage: React.FC<FormsPageProps> = ({ formsData, uuid }) => {
 	const router = useRouter();
+	console.log("formsData", typeof formsData[0].published);
 	return (
 		<div className="w-full space-y-4">
 			<div className="flex items-center justify-between">
@@ -46,7 +47,7 @@ export const FormsPage: React.FC<FormsPageProps> = ({ formsData, uuid }) => {
 									<h2 className="text-lg font-medium">
 										{form.title ?? "Untitled"}
 									</h2>
-									{!form.isPublished && (
+									{!form.published && (
 										<span className="text-sm text-muted-foreground">Draft</span>
 									)}
 								</div>

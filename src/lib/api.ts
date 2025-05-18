@@ -7,7 +7,7 @@ interface FormDetail {
 		formId: string;
 		bgColor: string;
 		logoUrl: string;
-	  };
+	};
 }
 
 export const insertPost = async (accessToken: string, details: FormDetail) => {
@@ -40,15 +40,14 @@ export const insertPost = async (accessToken: string, details: FormDetail) => {
 	}
 };
 
-
 export const fetchUserForms = async (accessToken: string) => {
 	try {
 		const response = await fetch(`/api/get-forms`, {
 			method: "GET",
-			  headers: {
-			    'Content-Type': 'application/json',
-			    Authorization: accessToken,
-			  },
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: accessToken,
+			},
 		});
 
 		if (!response.ok) {
@@ -58,6 +57,26 @@ export const fetchUserForms = async (accessToken: string) => {
 		return data.data;
 	} catch (error) {
 		console.error("Failed to fetch user forms:", error);
+		throw error;
+	}
+};
+
+export const fetchForm = async (id: string) => {
+	try {
+		const response = await fetch(`/api/fetch-form`, {
+			method: "GET",
+			headers: {
+				id,
+			},
+		});
+
+		if (!response.ok) {
+			throw new Error(`Error: ${response.status}`);
+		}
+		const data = await response.json();
+		return data.data;
+	} catch (error) {
+		console.error("Failed to fetch form:", error);
 		throw error;
 	}
 };
