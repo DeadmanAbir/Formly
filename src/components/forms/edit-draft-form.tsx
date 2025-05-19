@@ -73,7 +73,7 @@ const EditDraftForm = ({
 				data: {
 					...formData,
 					formId: uuid,
-					published: false,
+					published: parsedData.published ?? false,
 				},
 				userId: "6e51e3e4-8412-4126-97e1-f35176169a11",
 			});
@@ -193,7 +193,7 @@ const EditDraftForm = ({
 						<Input
 							type="text"
 							placeholder="Form title"
-							value={title}
+							value={title ?? ""}
 							onChange={(e) => setTitle(e.target.value)}
 							className="text-4xl font-light w-full border-none focus:outline-none focus:ring-0 text-gray-400 placeholder:text-gray-400"
 						/>
