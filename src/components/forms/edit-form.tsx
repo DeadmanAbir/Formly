@@ -13,7 +13,13 @@ const EditForm = async ({ uuid }: { uuid: string }) => {
 	if (data?.data?.published) {
 		return <EditPublishedForm formData={JSON.stringify(data.data)} />;
 	}
-	return <EditDraftForm uuid={uuid} />;
+	return (
+		<EditDraftForm
+			uuid={uuid}
+			initialData={data?.data?.content || undefined}
+			name={data?.data?.title || undefined}
+		/>
+	);
 };
 
 export default EditForm;

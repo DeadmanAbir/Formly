@@ -19,26 +19,60 @@ import {
 } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Editor } from "./dynamic-editor";
+import { insertFormFn } from "@/lib/tanstack-query/mutation";
+import { useRef, useCallback } from "react";
+import { useDebouncedCallback } from "use-debounce";
 import PreviewForm from "./preview-form";
 
-const EditDraftForm = ({ uuid }: { uuid: string }) => {
+const EditDraftForm = ({
+	uuid,
+	initialData,
+	name,
+}: {
+	uuid: string;
+	initialData?: string;
+	name?: string;
+}) => {
+	const { mutate: insertForm } = insertFormFn("access_token", {
+		onSuccess: (data: any) => {
+			console.log(data);
+		},
+		onError: (error: unknown) => {
+			console.error(error);
+		},
+	});
+
+	// Debounce insertForm so it doesn't fire every ms
+	const debouncedInsertForm = useDebouncedCallback(
+		(doc: PartialBlock[] | undefined) => {
+			insertForm({
+				data: {
+					content: JSON.stringify(doc),
+					title: title,
+					buttonLabel: buttonLabel,
+					formId: uuid,
+					bgColor: bgColor,
+					logoUrl: logoUrl,
+					published: false,
+				},
+				userId: "6e51e3e4-8412-4126-97e1-f35176169a11",
+			});
+		},
+		800
+	);
+
 	const [showOptions, setShowOptions] = useState<boolean>(false);
-	const [title, setTitle] = useState<string | undefined>(undefined);
+	const [title, setTitle] = useState<string | undefined>(name);
 	const [showPreview, setShowPreview] = useState<boolean>(false);
 	const [initialContent, setInitialContent] = useState<
 		PartialBlock[] | undefined
-	>(undefined);
+	>(initialData ? JSON.parse(initialData) : undefined);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [buttonLabel, setButtonLabel] = useState("Submit");
 	const [bgColor, setBgColor] = useState("bg-white");
 	const [showCoverModal, setShowCoverModal] = useState(false);
 	const [showLogoModal, setShowLogoModal] = useState(false);
 	const [logoUrl, setLogoUrl] = useState<string | undefined>(undefined);
-
-	useEffect(() => {
-		const content = loadFromStorage();
-		setInitialContent(content);
-	}, []);
 
 	const handleHeaderSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -146,6 +180,7 @@ const EditDraftForm = ({ uuid }: { uuid: string }) => {
 						<Input
 							type="text"
 							placeholder="Form title"
+							value={title}
 							onChange={(e) => setTitle(e.target.value)}
 							className="text-4xl font-light w-full border-none focus:outline-none focus:ring-0 text-gray-400 placeholder:text-gray-400"
 						/>
@@ -154,6 +189,7 @@ const EditDraftForm = ({ uuid }: { uuid: string }) => {
 						setContent={setInitialContent}
 						initialContent={initialContent}
 						editable={true}
+						onContentChange={debouncedInsertForm}
 					/>
 				</div>
 			)}

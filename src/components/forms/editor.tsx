@@ -14,12 +14,14 @@ interface EditorProps {
 	setContent?: Dispatch<SetStateAction<PartialBlock[] | undefined>>;
 	initialContent?: PartialBlock[];
 	editable?: boolean;
+	onContentChange?: (doc: PartialBlock[] | undefined) => void;
 }
 
 const Editor = ({
 	setContent,
 	initialContent,
 	editable = true,
+	onContentChange,
 }: EditorProps) => {
 	const { resolvedTheme } = useTheme();
 
@@ -41,14 +43,16 @@ const Editor = ({
 		[initialContent]
 	);
 
-	// ALWAYS call this hook exactly once
 	const editor = useCreateBlockNote(options);
 
 	return (
 		<BlockNoteView
 			editable={editable}
 			editor={editor}
-			onChange={() => setContent?.(editor.document)}
+			onChange={() => {
+				setContent?.(editor.document);
+				onContentChange?.(editor.document);
+			}}
 			theme={resolvedTheme === "dark" ? "dark" : "light"}
 			shadCNComponents={{ Input, Button }}
 		/>

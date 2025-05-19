@@ -20,15 +20,18 @@ export async function POST(request: NextRequest) {
 		});
 
 		if (existingForm) {
-			return NextResponse.json(
-				{
-					success: false,
-					error: "Form with this ID already exists.",
+			const updatedForm = await prisma.form.update({
+				where: { id: formId },
+				data: {
+					content,
+					title,
+					buttonLabel,
+					bgColor,
+					logoUrl,
+					published,
 				},
-				{
-					status: 400,
-				}
-			);
+			});
+			return NextResponse.json({ success: true, data: updatedForm });
 		}
 
 		const data = await prisma.form.create({
