@@ -23,7 +23,7 @@ import PreviewForm from "./preview-form";
 
 const EditDraftForm = ({ uuid }: { uuid: string }) => {
 	const [showOptions, setShowOptions] = useState<boolean>(false);
-	const [title, setTitle] = useState<string>("");
+	const [title, setTitle] = useState<string | undefined>(undefined);
 	const [showPreview, setShowPreview] = useState<boolean>(false);
 	const [initialContent, setInitialContent] = useState<
 		PartialBlock[] | undefined
@@ -33,7 +33,7 @@ const EditDraftForm = ({ uuid }: { uuid: string }) => {
 	const [bgColor, setBgColor] = useState("bg-white");
 	const [showCoverModal, setShowCoverModal] = useState(false);
 	const [showLogoModal, setShowLogoModal] = useState(false);
-	const [logoUrl, setLogoUrl] = useState("");
+	const [logoUrl, setLogoUrl] = useState<string | undefined>(undefined);
 
 	useEffect(() => {
 		const content = loadFromStorage();

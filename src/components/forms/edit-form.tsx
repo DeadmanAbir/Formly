@@ -10,7 +10,7 @@ const EditForm = async ({ uuid }: { uuid: string }) => {
 	});
 	const data = await res.json();
 
-	if (data.data.published) {
+	if (data?.data?.published) {
 		return <EditPublishedForm formData={JSON.stringify(data.data)} />;
 	}
 	return <EditDraftForm uuid={uuid} />;

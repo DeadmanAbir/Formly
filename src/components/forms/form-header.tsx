@@ -11,11 +11,11 @@ interface FormHeaderProps {
 	onPublish?: () => void;
 	data: {
 		content: string;
-		title: string;
+		title?: string;
 		buttonLabel: string;
 		formId: string;
 		bgColor: string;
-		logoUrl: string;
+		logoUrl?: string;
 	};
 }
 
@@ -73,6 +73,7 @@ export function FormHeader({
 								formId: data.formId,
 								bgColor: data.bgColor,
 								logoUrl: data.logoUrl,
+								published: true,
 							},
 							userId,
 						})

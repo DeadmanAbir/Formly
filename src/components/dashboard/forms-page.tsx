@@ -18,7 +18,6 @@ interface FormsPageProps {
 
 export const FormsPage: React.FC<FormsPageProps> = ({ formsData, uuid }) => {
 	const router = useRouter();
-	console.log("formsData", typeof formsData[0].published);
 	return (
 		<div className="w-full space-y-4">
 			<div className="flex items-center justify-between">

@@ -2,11 +2,12 @@ interface FormDetail {
 	userId: string;
 	data: {
 		content: string;
-		title: string;
+		title?: string;
 		buttonLabel: string;
 		formId: string;
 		bgColor: string;
-		logoUrl: string;
+		logoUrl?: string;
+		published: boolean;
 	};
 }
 
@@ -26,6 +27,7 @@ export const insertPost = async (accessToken: string, details: FormDetail) => {
 				formId: details.data.formId,
 				bgColor: details.data.bgColor,
 				logoUrl: details.data.logoUrl,
+				published: details.data.published,
 			}),
 		});
 

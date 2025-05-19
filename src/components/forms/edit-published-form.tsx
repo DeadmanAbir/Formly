@@ -21,8 +21,7 @@ import PreviewForm from "./preview-form";
 
 const EditPublishedForm = ({ formData }: { formData: string }) => {
 	const parsedData = JSON.parse(formData);
-	// const [showOptions, setShowOptions] = useState<boolean>(false);
-	const [title, setTitle] = useState<string>(parsedData.title);
+	const [title, setTitle] = useState<string>(parsedData.title ?? "Untitled");
 	const [showPreview, setShowPreview] = useState<boolean>(false);
 	const [initialContent, setInitialContent] = useState<
 		PartialBlock[] | undefined
@@ -122,7 +121,7 @@ const EditPublishedForm = ({ formData }: { formData: string }) => {
 				<form>
 					<Input
 						type="text"
-						placeholder="Form title"
+						value={title}
 						onChange={(e) => setTitle(e.target.value)}
 						className="text-4xl font-light w-full border-none focus:outline-none focus:ring-0 text-gray-400 placeholder:text-gray-400"
 					/>
