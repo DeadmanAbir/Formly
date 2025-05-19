@@ -19,8 +19,18 @@ import { Input } from "../ui/input";
 import { Editor } from "./dynamic-editor";
 import PreviewForm from "./preview-form";
 
-const EditPublishedForm = ({ formData }: { formData: string }) => {
-	const parsedData = JSON.parse(formData);
+interface EditPublishedFormProps {
+	formData?: string;
+}
+
+const EditPublishedForm = ({ formData }: EditPublishedFormProps) => {
+	if (!formData) return null;
+	let parsedData: any = {};
+	try {
+		parsedData = JSON.parse(formData);
+	} catch (e) {
+		return <div>Invalid form data</div>;
+	}
 	const [title, setTitle] = useState<string>(parsedData.title ?? "Untitled");
 	const [showPreview, setShowPreview] = useState<boolean>(false);
 	const [initialContent, setInitialContent] = useState<

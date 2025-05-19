@@ -1,9 +1,7 @@
 "use client";
-import { loadFromStorage, saveToStorage } from "@/lib/helper";
 import { PartialBlock } from "@blocknote/core";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "../ui/button";
-import { ArrowLeft, ArrowRight } from "lucide-react";
 import { FormHeader } from "./form-header";
 import FormsOptions from "./forms-options";
 import { cn } from "@/lib/utils";
@@ -20,19 +18,39 @@ import {
 import { Input } from "../ui/input";
 import { Editor } from "./dynamic-editor";
 import { insertFormFn } from "@/lib/tanstack-query/mutation";
-import { useRef, useCallback } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import PreviewForm from "./preview-form";
+import { ArrowRight } from "lucide-react";
 
 const EditDraftForm = ({
+	formData,
 	uuid,
-	initialData,
-	name,
 }: {
+	formData?: string;
 	uuid: string;
-	initialData?: string;
-	name?: string;
 }) => {
+	const [showOptions, setShowOptions] = useState<boolean>(false);
+	const [showPreview, setShowPreview] = useState<boolean>(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [showCoverModal, setShowCoverModal] = useState(false);
+	const [showLogoModal, setShowLogoModal] = useState(false);
+
+	const parsedData = formData ? JSON.parse(formData) : {};
+
+	const [title, setTitle] = useState<string | undefined>(parsedData.title);
+	const [initialContent, setInitialContent] = useState<
+		PartialBlock[] | undefined
+	>(parsedData.content ? JSON.parse(parsedData.content) : undefined);
+	const [buttonLabel, setButtonLabel] = useState<string>(
+		parsedData.buttonLabel || "Submit"
+	);
+	const [bgColor, setBgColor] = useState<string>(
+		parsedData.bgColor || "bg-white"
+	);
+	const [logoUrl, setLogoUrl] = useState<string | undefined>(
+		parsedData.logoUrl
+	);
+
 	const { mutate: insertForm } = insertFormFn("access_token", {
 		onSuccess: (data: any) => {
 			console.log(data);
@@ -42,49 +60,44 @@ const EditDraftForm = ({
 		},
 	});
 
-	// Debounce insertForm so it doesn't fire every ms
-	const debouncedInsertForm = useDebouncedCallback(
-		(doc: PartialBlock[] | undefined) => {
+	// Debounce form updates
+	const debouncedFormUpdate = useDebouncedCallback(
+		(formData: {
+			content?: string;
+			title?: string;
+			buttonLabel: string;
+			bgColor: string;
+			logoUrl?: string;
+		}) => {
 			insertForm({
 				data: {
-					content: JSON.stringify(doc),
-					title: title,
-					buttonLabel: buttonLabel,
+					...formData,
 					formId: uuid,
-					bgColor: bgColor,
-					logoUrl: logoUrl,
 					published: false,
 				},
 				userId: "6e51e3e4-8412-4126-97e1-f35176169a11",
 			});
 		},
-		800
+		2000
 	);
 
-	const [showOptions, setShowOptions] = useState<boolean>(false);
-	const [title, setTitle] = useState<string | undefined>(name);
-	const [showPreview, setShowPreview] = useState<boolean>(false);
-	const [initialContent, setInitialContent] = useState<
-		PartialBlock[] | undefined
-	>(initialData ? JSON.parse(initialData) : undefined);
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [buttonLabel, setButtonLabel] = useState("Submit");
-	const [bgColor, setBgColor] = useState("bg-white");
-	const [showCoverModal, setShowCoverModal] = useState(false);
-	const [showLogoModal, setShowLogoModal] = useState(false);
-	const [logoUrl, setLogoUrl] = useState<string | undefined>(undefined);
-
-	const handleHeaderSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
-		if (!showOptions) {
-			console.log(initialContent);
-			alert("check console");
-			saveToStorage(JSON.stringify(initialContent));
-		} else {
-			alert("Form title saved");
-			setShowOptions(!showOptions);
-		}
-	};
+	// Watch for changes in form fields and trigger update
+	useEffect(() => {
+		debouncedFormUpdate({
+			content: initialContent ? JSON.stringify(initialContent) : undefined,
+			title,
+			buttonLabel,
+			bgColor,
+			logoUrl,
+		});
+	}, [
+		title,
+		buttonLabel,
+		bgColor,
+		logoUrl,
+		initialContent,
+		debouncedFormUpdate,
+	]);
 
 	const data = {
 		content: JSON.stringify(initialContent),
@@ -176,7 +189,7 @@ const EditDraftForm = ({
 							Customize
 						</Button>
 					</div>
-					<form onSubmit={handleHeaderSubmit}>
+					<form>
 						<Input
 							type="text"
 							placeholder="Form title"
@@ -189,7 +202,6 @@ const EditDraftForm = ({
 						setContent={setInitialContent}
 						initialContent={initialContent}
 						editable={true}
-						onContentChange={debouncedInsertForm}
 					/>
 				</div>
 			)}

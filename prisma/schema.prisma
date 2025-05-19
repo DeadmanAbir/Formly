@@ -15,7 +15,7 @@ model User {
 
 model Form {
   id          String   @id
-  content     String
+  content     String?
   userId      String
   title       String?
   buttonLabel String   @default("Submit")

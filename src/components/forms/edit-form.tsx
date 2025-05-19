@@ -1,25 +1,18 @@
 import EditDraftForm from "./edit-draft-form";
 import EditPublishedForm from "./edit-published-form";
 
-const EditForm = async ({ uuid }: { uuid: string }) => {
-	const res = await fetch("http://localhost:3000/api/fetch-form", {
-		method: "GET",
-		headers: {
-			id: uuid,
-		},
-	});
-	const data = await res.json();
+interface EditFormProps {
+	uuid: string;
+	formData?: string;
+}
 
-	if (data?.data?.published) {
-		return <EditPublishedForm formData={JSON.stringify(data.data)} />;
+const EditForm = ({ uuid, formData }: EditFormProps) => {
+	const parsedData = formData ? JSON.parse(formData) : undefined;
+
+	if (parsedData?.published) {
+		return <EditPublishedForm formData={formData} />;
 	}
-	return (
-		<EditDraftForm
-			uuid={uuid}
-			initialData={data?.data?.content || undefined}
-			name={data?.data?.title || undefined}
-		/>
-	);
+	return <EditDraftForm formData={formData} uuid={uuid} />;
 };
 
 export default EditForm;
