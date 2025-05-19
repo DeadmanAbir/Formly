@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { saveToStorage } from "@/lib/helper";
 import { insertFormFn } from "@/lib/tanstack-query/mutation";
-import { Settings } from "lucide-react";
+import { Settings, FileClock } from "lucide-react";
 
 interface FormHeaderProps {
 	userId: string;
@@ -17,6 +17,7 @@ interface FormHeaderProps {
 		bgColor: string;
 		logoUrl?: string;
 	};
+	draftSaved?: boolean;
 }
 
 export function FormHeader({
@@ -24,6 +25,7 @@ export function FormHeader({
 	userId,
 	onPreview,
 	onPublish,
+	draftSaved = false,
 }: FormHeaderProps) {
 	const { mutate: insertForm, isPending: isInserting } = insertFormFn(
 		"access_token",
@@ -42,13 +44,17 @@ export function FormHeader({
 			<div className="flex items-center gap-4">
 				<Button
 					variant="ghost"
-					className="text-sm text-muted-foreground"
-					onClick={() => {
-						alert("check console");
-						saveToStorage(data.content);
-					}}
+					className={`text-sm text-muted-foreground relative transition-all duration-300 ${draftSaved ? 'animate-pulse text-blue-600' : ''}`}
+					style={{ minWidth: 80 }}
 				>
-					Draft
+					{draftSaved ? (
+						<span className="flex items-center gap-1">
+							<FileClock className="h-4 w-4 mr-1 animate-spin-slow" />
+							Saved to Draft
+						</span>
+					) : (
+						"Draft"
+					)}
 				</Button>
 				<Button variant="ghost" size="icon" className="h-8 w-8">
 					<Settings className="h-4 w-4" />

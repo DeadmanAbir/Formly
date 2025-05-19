@@ -29,6 +29,7 @@ const EditDraftForm = ({
 	formData?: string;
 	uuid: string;
 }) => {
+	const [draftSaved, setDraftSaved] = useState(false);
 	const [showOptions, setShowOptions] = useState<boolean>(false);
 	const [showPreview, setShowPreview] = useState<boolean>(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -77,8 +78,10 @@ const EditDraftForm = ({
 				},
 				userId: "6e51e3e4-8412-4126-97e1-f35176169a11",
 			});
+			setDraftSaved(true);
+			setTimeout(() => setDraftSaved(false), 2000);
 		},
-		2000
+		5000
 	);
 
 	// Watch for changes in form fields and trigger update
@@ -121,6 +124,7 @@ const EditDraftForm = ({
 				userId={"6e51e3e4-8412-4126-97e1-f35176169a11"}
 				onPreview={() => setShowPreview(!showPreview)}
 				onPublish={() => {}}
+				draftSaved={draftSaved}
 			/>
 
 			{showOptions ? (

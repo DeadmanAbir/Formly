@@ -7,7 +7,7 @@ interface Props {
 }
 
 export default async function FormPage({ params }: Props) {
-	const { slug } = params;
+	const { slug } = await params;
 	const res = await fetch("http://localhost:3000/api/fetch-form", {
 		method: "GET",
 		headers: {
