@@ -2,10 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Check, Copy } from "lucide-react";
 import { notFound, usePathname } from "next/navigation";
 import { useState } from "react";
+import Integrations from "./integrations";
 
 export default function ShareForm({ show }: { show: boolean }) {
 	const pathname = usePathname();
@@ -39,7 +40,7 @@ export default function ShareForm({ show }: { show: boolean }) {
 						<TabsTrigger value="settings">Settings</TabsTrigger>
 					</TabsList>
 
-					<div className="mt-8">
+					<TabsContent value="share" className="mt-8">
 						<div className="max-w-2xl mx-auto">
 							<h1 className="text-2xl font-semibold mb-4">Share Link</h1>
 							<p className="text-gray-600 mb-8">
@@ -75,7 +76,11 @@ export default function ShareForm({ show }: { show: boolean }) {
 								Use custom domain
 							</Button>
 						</div>
-					</div>
+					</TabsContent>
+
+					<TabsContent value="integrations" className="mt-8">
+						<Integrations />
+					</TabsContent>
 				</Tabs>
 			</div>
 		</div>
