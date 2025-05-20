@@ -1,4 +1,5 @@
-import { LinkBlock } from "@/components/LinkBlock";
+import { LinkBlock } from "@/components/blocks/link-block";
+import { QuestionBlock } from "@/components/blocks/question-block";
 import {
 	BlockNoteEditor,
 	BlockNoteSchema,
@@ -12,6 +13,7 @@ export const schema = BlockNoteSchema.create({
 	blockSpecs: {
 		...defaultBlockSpecs,
 		link: LinkBlock,
+		question: QuestionBlock,
 	},
 });
 
