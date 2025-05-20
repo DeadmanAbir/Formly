@@ -21,6 +21,7 @@ import { insertFormFn } from "@/lib/tanstack-query/mutation";
 import { useDebouncedCallback } from "use-debounce";
 import PreviewForm from "./preview-form";
 import { ArrowRight } from "lucide-react";
+import { CustomPartialBlock } from "@/lib/types";
 
 const EditDraftForm = ({
 	formData,
@@ -40,7 +41,7 @@ const EditDraftForm = ({
 
 	const [title, setTitle] = useState<string | undefined>(parsedData.title);
 	const [initialContent, setInitialContent] = useState<
-		PartialBlock[] | undefined
+		CustomPartialBlock[] | undefined
 	>(parsedData.content ? JSON.parse(parsedData.content) : undefined);
 	const [buttonLabel, setButtonLabel] = useState<string>(
 		parsedData.buttonLabel || "Submit"

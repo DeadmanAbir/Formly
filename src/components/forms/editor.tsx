@@ -1,20 +1,32 @@
 "use client";
 import { en } from "@blocknote/core/locales";
 import { codeBlock } from "@blocknote/code-block";
-import { useCreateBlockNote } from "@blocknote/react";
+import {
+	getDefaultReactSlashMenuItems,
+	SuggestionMenuController,
+	useCreateBlockNote,
+} from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/shadcn";
 import "@blocknote/shadcn/style.css";
 import { useTheme } from "next-themes";
 import * as Button from "@/components/ui/button";
 import * as Input from "@/components/ui/input";
 import { Dispatch, SetStateAction, useMemo } from "react";
-import { PartialBlock } from "@blocknote/core";
+import {
+	BlockNoteSchema,
+	defaultBlockSpecs,
+	filterSuggestionItems,
+	PartialBlock,
+} from "@blocknote/core";
+import { LinkBlock } from "../LinkBlock";
+import { Link } from "lucide-react";
+import { CustomBlockNoteEditor, CustomPartialBlock, schema } from "@/lib/types";
 
 interface EditorProps {
-	setContent?: Dispatch<SetStateAction<PartialBlock[] | undefined>>;
-	initialContent?: PartialBlock[];
+	setContent?: Dispatch<SetStateAction<CustomPartialBlock[] | undefined>>;
+	initialContent?: CustomPartialBlock[];
 	editable?: boolean;
-	onContentChange?: (doc: PartialBlock[] | undefined) => void;
+	onContentChange?: (doc: CustomPartialBlock[] | undefined) => void;
 }
 
 const Editor = ({
@@ -25,9 +37,10 @@ const Editor = ({
 }: EditorProps) => {
 	const { resolvedTheme } = useTheme();
 
-	// Memoize your options so that you’re not recreating the object every render
+	// Memoize your options so that you're not recreating the object every render
 	const options = useMemo(
 		() => ({
+			schema,
 			codeBlock,
 			initialContent,
 			dictionary: {
@@ -40,10 +53,39 @@ const Editor = ({
 				},
 			},
 		}),
-		[initialContent]
+		[initialContent, schema]
 	);
 
 	const editor = useCreateBlockNote(options);
+
+	const getLinkSlashMenuItem = (editor: CustomBlockNoteEditor) => ({
+		title: "Insert Link",
+		onItemClick: () => {
+			editor.insertBlocks(
+				[
+					{
+						type: "link",
+						props: {
+							title: "New Link",
+							url: "",
+						},
+					},
+				],
+				editor.getTextCursorPosition().block,
+				"after"
+			);
+		},
+		aliases: ["link", "url", "hyperlink"],
+		group: "Media",
+		icon: <Link size={18} />,
+		subtext: "Insert a custom link block",
+	});
+
+	// Combine default items with our custom item
+	const getCustomSlashMenuItems = (editor: CustomBlockNoteEditor) => [
+		...getDefaultReactSlashMenuItems(editor),
+		getLinkSlashMenuItem(editor),
+	];
 
 	return (
 		<BlockNoteView
@@ -55,7 +97,15 @@ const Editor = ({
 			}}
 			theme={resolvedTheme === "dark" ? "dark" : "light"}
 			shadCNComponents={{ Input, Button }}
-		/>
+		>
+			{/* Add the slash menu controller */}
+			<SuggestionMenuController
+				triggerCharacter="/"
+				getItems={async (query) =>
+					filterSuggestionItems(getCustomSlashMenuItems(editor), query)
+				}
+			/>
+		</BlockNoteView>
 	);
 };
 
