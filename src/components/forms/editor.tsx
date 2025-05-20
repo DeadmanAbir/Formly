@@ -18,8 +18,7 @@ import {
 	filterSuggestionItems,
 	PartialBlock,
 } from "@blocknote/core";
-import { LinkBlock } from "../blocks/link-block";
-import { QuestionBlock } from "../blocks/question-block";
+
 import { Link } from "lucide-react";
 import { CustomBlockNoteEditor, CustomPartialBlock, schema } from "@/lib/types";
 
@@ -60,20 +59,21 @@ const Editor = ({
 	const editor = useCreateBlockNote(options);
 
 	const getLinkSlashMenuItem = (editor: CustomBlockNoteEditor) => ({
-		title: "Insert Link",
+		title: "Link",
 		onItemClick: () => {
 			editor.insertBlocks(
 				[
 					{
-						type: "question",
+						type: "header",
 						props: {
 							title: "",
 						},
 					},
 					{
-						type: "link",
+						type: "input",
 						props: {
-							url: "",
+							value: "",
+							inputType: "link",
 						},
 					},
 				],
@@ -84,7 +84,6 @@ const Editor = ({
 		aliases: ["link", "url", "hyperlink"],
 		group: "Questions",
 		icon: <Link size={18} />,
-		subtext: "Insert a custom link block",
 	});
 
 	// Combine default items with our custom item

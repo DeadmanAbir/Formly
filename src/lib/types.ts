@@ -1,10 +1,8 @@
-import { LinkBlock } from "@/components/blocks/link-block";
-import { QuestionBlock } from "@/components/blocks/question-block";
+import { HeaderBlock } from "@/components/blocks/header-block";
+import { InputBlock } from "@/components/blocks/input-block";
 import {
 	BlockNoteEditor,
 	BlockNoteSchema,
-	defaultBlockSchema,
-	DefaultBlockSchema,
 	defaultBlockSpecs,
 	PartialBlock,
 } from "@blocknote/core";
@@ -12,8 +10,8 @@ import {
 export const schema = BlockNoteSchema.create({
 	blockSpecs: {
 		...defaultBlockSpecs,
-		link: LinkBlock,
-		question: QuestionBlock,
+		input: InputBlock,
+		header: HeaderBlock,
 	},
 });
 

@@ -3,9 +3,9 @@ import { createReactBlockSpec } from "@blocknote/react";
 import { Input } from "@/components/ui/input";
 
 // Create the Question block spec
-export const QuestionBlock = createReactBlockSpec(
+export const HeaderBlock = createReactBlockSpec(
 	{
-		type: "question",
+		type: "header",
 		propSchema: {
 			textAlignment: defaultProps.textAlignment,
 			title: {

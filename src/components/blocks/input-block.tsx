@@ -1,23 +1,24 @@
 import { defaultProps } from "@blocknote/core";
 import { createReactBlockSpec } from "@blocknote/react";
 import { Input } from "@/components/ui/input";
-import { Link } from "lucide-react";
+import { Link, Text } from "lucide-react";
 
-export const LinkBlock = createReactBlockSpec(
+export const InputBlock = createReactBlockSpec(
 	{
-		type: "link",
+		type: "input",
 		propSchema: {
 			textAlignment: defaultProps.textAlignment,
-			url: {
+			value: {
 				default: "",
 			},
+			inputType: { default: "text" },
 		},
 		content: "none",
 	},
 	{
 		render: (props) => {
 			const { block, editor } = props;
-
+			const { inputType } = block.props;
 			return (
 				<div className="p-4 pt-0 border rounded-md bg-muted/20">
 					<div className="flex flex-col gap-2">
@@ -25,15 +26,16 @@ export const LinkBlock = createReactBlockSpec(
 						<div className="flex items-center gap-2">
 							<Input
 								className="flex-1 border-none focus:ring-0 focus:ring-offset-0"
-								value={block.props.url}
+								value={block.props.value}
 								placeholder="Type placeholder text"
 								onChange={(e) => {
 									editor.updateBlock(block, {
-										props: { url: e.target.value },
+										props: { value: e.target.value },
 									});
 								}}
 							/>
-							<Link size={28} />
+
+							{inputType === "link" ? <Link size={28} /> : <Text size={28} />}
 						</div>
 					</div>
 				</div>
