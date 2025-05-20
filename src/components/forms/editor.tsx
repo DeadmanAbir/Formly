@@ -12,15 +12,10 @@ import { useTheme } from "next-themes";
 import * as Button from "@/components/ui/button";
 import * as Input from "@/components/ui/input";
 import { Dispatch, SetStateAction, useMemo } from "react";
-import {
-	BlockNoteSchema,
-	defaultBlockSpecs,
-	filterSuggestionItems,
-	PartialBlock,
-} from "@blocknote/core";
+import { filterSuggestionItems } from "@blocknote/core";
 
-import { Link } from "lucide-react";
 import { CustomBlockNoteEditor, CustomPartialBlock, schema } from "@/lib/types";
+import { getAllCustomSlashMenuItems } from "@/lib/slash-menu-item";
 
 interface EditorProps {
 	setContent?: Dispatch<SetStateAction<CustomPartialBlock[] | undefined>>;
@@ -58,37 +53,9 @@ const Editor = ({
 
 	const editor = useCreateBlockNote(options);
 
-	const getLinkSlashMenuItem = (editor: CustomBlockNoteEditor) => ({
-		title: "Link",
-		onItemClick: () => {
-			editor.insertBlocks(
-				[
-					{
-						type: "header",
-						props: {
-							title: "",
-						},
-					},
-					{
-						type: "input",
-						props: {
-							value: "",
-							inputType: "link",
-						},
-					},
-				],
-				editor.getTextCursorPosition().block,
-				"before"
-			);
-		},
-		aliases: ["link", "url", "hyperlink"],
-		group: "Questions",
-		icon: <Link size={18} />,
-	});
-
 	// Combine default items with our custom item
 	const getCustomSlashMenuItems = (editor: CustomBlockNoteEditor) => [
-		getLinkSlashMenuItem(editor),
+		...getAllCustomSlashMenuItems(editor),
 		...getDefaultReactSlashMenuItems(editor),
 	];
 

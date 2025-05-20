@@ -1,7 +1,28 @@
 import { defaultProps } from "@blocknote/core";
 import { createReactBlockSpec } from "@blocknote/react";
 import { Input } from "@/components/ui/input";
-import { Link, Text } from "lucide-react";
+import {
+	AlignJustify,
+	AtSign,
+	Hash,
+	Layers2,
+	Link,
+	Phone,
+	Text,
+	LucideIcon,
+} from "lucide-react";
+
+// Map input types to their corresponding icons
+const inputTypeIcons: Record<string, LucideIcon> = {
+	link: Link,
+	phone: Phone,
+	email: AtSign,
+	number: Hash,
+	short: Layers2,
+	long: AlignJustify,
+	text: Text,
+	// Add any additional input types here
+};
 
 export const InputBlock = createReactBlockSpec(
 	{
@@ -19,6 +40,10 @@ export const InputBlock = createReactBlockSpec(
 		render: (props) => {
 			const { block, editor } = props;
 			const { inputType } = block.props;
+
+			// Get the icon component for the current input type, defaulting to Text icon
+			const IconComponent = inputTypeIcons[inputType as string] || Text;
+
 			return (
 				<div className="p-4 pt-0 border rounded-md bg-muted/20">
 					<div className="flex flex-col gap-2">
@@ -34,8 +59,7 @@ export const InputBlock = createReactBlockSpec(
 									});
 								}}
 							/>
-
-							{inputType === "link" ? <Link size={28} /> : <Text size={28} />}
+							<IconComponent size={28} />
 						</div>
 					</div>
 				</div>
