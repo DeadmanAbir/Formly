@@ -2,12 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Check, Copy } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { notFound, usePathname } from "next/navigation";
 import { useState } from "react";
+import Integrations from "./integrations";
 
-export default function ShareForm() {
+export default function ShareForm({ show }: { show: boolean }) {
 	const pathname = usePathname();
 	const [copied, setCopied] = useState(false);
 	const url = window.location.origin;
@@ -24,7 +25,9 @@ export default function ShareForm() {
 				console.error("Could not copy text: ", err);
 			});
 	};
-
+	if (!show) {
+		notFound();
+	}
 	return (
 		<div className="flex justify-center items-center h-screen ">
 			<div className="container max-w-6xl pt-10">
@@ -37,7 +40,7 @@ export default function ShareForm() {
 						<TabsTrigger value="settings">Settings</TabsTrigger>
 					</TabsList>
 
-					<div className="mt-8">
+					<TabsContent value="share" className="mt-8">
 						<div className="max-w-2xl mx-auto">
 							<h1 className="text-2xl font-semibold mb-4">Share Link</h1>
 							<p className="text-gray-600 mb-8">
@@ -73,7 +76,11 @@ export default function ShareForm() {
 								Use custom domain
 							</Button>
 						</div>
-					</div>
+					</TabsContent>
+
+					<TabsContent value="integrations" className="mt-8">
+						<Integrations />
+					</TabsContent>
 				</Tabs>
 			</div>
 		</div>

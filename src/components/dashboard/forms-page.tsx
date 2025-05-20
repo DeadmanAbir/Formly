@@ -40,21 +40,39 @@ export const FormsPage: React.FC<FormsPageProps> = ({ formsData, uuid }) => {
 						key={form.id}
 						className="flex items-center justify-between border rounded-lg p-4"
 					>
-						<Link href={`/forms/${form.id}/share`} className="flex-1">
-							<div className="space-y-1">
-								<div className="flex items-center gap-2">
-									<h2 className="text-lg font-medium">
-										{form.title ?? "Untitled"}
-									</h2>
-									{!form.published && (
-										<span className="text-sm text-muted-foreground">Draft</span>
-									)}
+						{form.published ? (
+							<Link href={`/forms/${form.id}/share`} className="flex-1">
+								<div className="space-y-1">
+									<div className="flex items-center gap-2">
+										<h2 className="text-lg font-medium">
+											{form.title ?? "Untitled"}
+										</h2>
+										{!form.published && (
+											<span className="text-sm text-muted-foreground">Draft</span>
+										)}
+									</div>
+									<p className="text-sm text-muted-foreground">
+										Created {new Date(form.createdAt).toLocaleDateString()}
+									</p>
 								</div>
-								<p className="text-sm text-muted-foreground">
-									Created {new Date(form.createdAt).toLocaleDateString()}
-								</p>
+							</Link>
+						) : (
+							<div className="flex-1">
+								<div className="space-y-1">
+									<div className="flex items-center gap-2">
+										<h2 className="text-lg font-medium">
+											{form.title ?? "Untitled"}
+										</h2>
+										{!form.published && (
+											<span className="text-sm text-muted-foreground">Draft</span>
+										)}
+									</div>
+									<p className="text-sm text-muted-foreground">
+										Created {new Date(form.createdAt).toLocaleDateString()}
+									</p>
+								</div>
 							</div>
-						</Link>
+						)}
 
 						<div className="flex items-center gap-2">
 							<Button

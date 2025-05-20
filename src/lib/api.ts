@@ -1,7 +1,7 @@
 interface FormDetail {
 	userId: string;
 	data: {
-		content: string;
+		content?: string;
 		title?: string;
 		buttonLabel: string;
 		formId: string;

@@ -19,7 +19,7 @@ export default async function FormPage({ params }: Props) {
 	});
 	const res = await data.json();
 
-	if (!res.data) {
+	if (!res.data || !res.data.published) {
 		notFound();
 	}
 	return (

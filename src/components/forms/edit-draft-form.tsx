@@ -1,9 +1,7 @@
 "use client";
-import { loadFromStorage, saveToStorage } from "@/lib/helper";
 import { PartialBlock } from "@blocknote/core";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "../ui/button";
-import { ArrowLeft, ArrowRight } from "lucide-react";
 import { FormHeader } from "./form-header";
 import FormsOptions from "./forms-options";
 import { cn } from "@/lib/utils";
@@ -19,38 +17,91 @@ import {
 } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Editor } from "./dynamic-editor";
+import { insertFormFn } from "@/lib/tanstack-query/mutation";
+import { useDebouncedCallback } from "use-debounce";
 import PreviewForm from "./preview-form";
+import { ArrowRight } from "lucide-react";
+import { CustomPartialBlock } from "@/lib/types";
 
-const EditDraftForm = ({ uuid }: { uuid: string }) => {
+const EditDraftForm = ({
+	formData,
+	uuid,
+}: {
+	formData?: string;
+	uuid: string;
+}) => {
+	const [draftSaved, setDraftSaved] = useState(false);
 	const [showOptions, setShowOptions] = useState<boolean>(false);
-	const [title, setTitle] = useState<string | undefined>(undefined);
 	const [showPreview, setShowPreview] = useState<boolean>(false);
-	const [initialContent, setInitialContent] = useState<
-		PartialBlock[] | undefined
-	>(undefined);
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [buttonLabel, setButtonLabel] = useState("Submit");
-	const [bgColor, setBgColor] = useState("bg-white");
 	const [showCoverModal, setShowCoverModal] = useState(false);
 	const [showLogoModal, setShowLogoModal] = useState(false);
-	const [logoUrl, setLogoUrl] = useState<string | undefined>(undefined);
 
+	const parsedData = formData ? JSON.parse(formData) : {};
+
+	const [title, setTitle] = useState<string | undefined>(parsedData.title);
+	const [initialContent, setInitialContent] = useState<
+		CustomPartialBlock[] | undefined
+	>(parsedData.content ? JSON.parse(parsedData.content) : undefined);
+	const [buttonLabel, setButtonLabel] = useState<string>(
+		parsedData.buttonLabel || "Submit"
+	);
+	const [bgColor, setBgColor] = useState<string>(
+		parsedData.bgColor || "bg-white"
+	);
+	const [logoUrl, setLogoUrl] = useState<string | undefined>(
+		parsedData.logoUrl
+	);
+
+	const { mutate: insertForm } = insertFormFn("access_token", {
+		onSuccess: (data: any) => {
+			console.log(data);
+		},
+		onError: (error: unknown) => {
+			console.error(error);
+		},
+	});
+
+	// Debounce form updates
+	const debouncedFormUpdate = useDebouncedCallback(
+		(formData: {
+			content?: string;
+			title?: string;
+			buttonLabel: string;
+			bgColor: string;
+			logoUrl?: string;
+		}) => {
+			insertForm({
+				data: {
+					...formData,
+					formId: uuid,
+					published: parsedData.published ?? false,
+				},
+				userId: "6e51e3e4-8412-4126-97e1-f35176169a11",
+			});
+			setDraftSaved(true);
+			setTimeout(() => setDraftSaved(false), 2000);
+		},
+		5000
+	);
+
+	// Watch for changes in form fields and trigger update
 	useEffect(() => {
-		const content = loadFromStorage();
-		setInitialContent(content);
-	}, []);
-
-	const handleHeaderSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
-		if (!showOptions) {
-			console.log(initialContent);
-			alert("check console");
-			saveToStorage(JSON.stringify(initialContent));
-		} else {
-			alert("Form title saved");
-			setShowOptions(!showOptions);
-		}
-	};
+		debouncedFormUpdate({
+			content: initialContent ? JSON.stringify(initialContent) : undefined,
+			title,
+			buttonLabel,
+			bgColor,
+			logoUrl,
+		});
+	}, [
+		title,
+		buttonLabel,
+		bgColor,
+		logoUrl,
+		initialContent,
+		debouncedFormUpdate,
+	]);
 
 	const data = {
 		content: JSON.stringify(initialContent),
@@ -74,6 +125,7 @@ const EditDraftForm = ({ uuid }: { uuid: string }) => {
 				userId={"6e51e3e4-8412-4126-97e1-f35176169a11"}
 				onPreview={() => setShowPreview(!showPreview)}
 				onPublish={() => {}}
+				draftSaved={draftSaved}
 			/>
 
 			{showOptions ? (
@@ -142,10 +194,11 @@ const EditDraftForm = ({ uuid }: { uuid: string }) => {
 							Customize
 						</Button>
 					</div>
-					<form onSubmit={handleHeaderSubmit}>
+					<form>
 						<Input
 							type="text"
 							placeholder="Form title"
+							value={title ?? ""}
 							onChange={(e) => setTitle(e.target.value)}
 							className="text-4xl font-light w-full border-none focus:outline-none focus:ring-0 text-gray-400 placeholder:text-gray-400"
 						/>
