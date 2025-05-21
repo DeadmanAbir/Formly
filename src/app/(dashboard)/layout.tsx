@@ -11,7 +11,7 @@ export default function RootLayout({
 	return (
 		<SidebarProvider>
 			<AppSidebar />
-			<main>
+			<main className="w-full">
 				<SidebarTrigger />
 				<DashboardHeader />
 				{children}

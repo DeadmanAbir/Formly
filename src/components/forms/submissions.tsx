@@ -67,9 +67,11 @@ export default function Submissions({ submissions }: SubmissionsProps) {
 									const IconComponent =
 										inputTypeIcons[item.icon as string] || Text;
 									return (
-										<TableHead key={index} className="flex items-center gap-1">
-											<IconComponent size={18} />
-											{item.question}
+										<TableHead key={index}>
+											<div className="flex items-center gap-1">
+												<IconComponent size={18} />
+												<span>{item.question}</span>
+											</div>
 										</TableHead>
 									);
 								}
