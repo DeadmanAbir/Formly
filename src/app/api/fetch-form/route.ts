@@ -9,6 +9,9 @@ export async function GET(request: NextRequest) {
 			where: {
 				id,
 			},
+			include: {
+				submissions: true,
+			},
 		});
 		return NextResponse.json({ success: true, data });
 	} catch (err: any) {

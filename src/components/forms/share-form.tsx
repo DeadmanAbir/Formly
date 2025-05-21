@@ -7,9 +7,17 @@ import { Check, Copy } from "lucide-react";
 import { notFound, usePathname } from "next/navigation";
 import { useState } from "react";
 import Integrations from "./integrations";
+import Submissions from "./submissions";
 
-export default function ShareForm({ show }: { show: boolean }) {
+export default function ShareForm({
+	show,
+	submissions,
+}: {
+	show: boolean;
+	submissions?: string;
+}) {
 	const pathname = usePathname();
+	console.log(JSON.parse(submissions ?? ""));
 	const [copied, setCopied] = useState(false);
 	const url = window.location.origin;
 
@@ -80,6 +88,9 @@ export default function ShareForm({ show }: { show: boolean }) {
 
 					<TabsContent value="integrations" className="mt-8">
 						<Integrations />
+					</TabsContent>
+					<TabsContent value="submissions" className="mt-8">
+						<Submissions submissions={submissions ?? ""} />
 					</TabsContent>
 				</Tabs>
 			</div>

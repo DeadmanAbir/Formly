@@ -16,11 +16,14 @@ export default async function FormPage({ params }: Props) {
 	});
 	const data = await res.json();
 	const formData = data?.data ? JSON.stringify(data.data) : undefined;
+	const submissions = data?.data
+		? JSON.stringify(data.data.submissions)
+		: undefined;
 
 	if (slug[1] === "edit") {
 		return <EditForm uuid={slug[0]} formData={formData} />;
 	} else if (slug[1] === "share") {
-		return <ShareForm show={data?.data?.published} />;
+		return <ShareForm show={data?.data?.published} submissions={submissions} />;
 	}
 
 	notFound();
