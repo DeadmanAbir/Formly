@@ -11,7 +11,12 @@ interface FormDetail {
 	};
 }
 
-export const insertPost = async (accessToken: string, details: FormDetail) => {
+interface SubmitDetails {
+	formId: string;
+	content: string;
+}
+
+export const insertForm = async (accessToken: string, details: FormDetail) => {
 	try {
 		const response = await fetch(`/api/insert-form`, {
 			method: "POST",
@@ -79,6 +84,30 @@ export const fetchForm = async (id: string) => {
 		return data.data;
 	} catch (error) {
 		console.error("Failed to fetch form:", error);
+		throw error;
+	}
+};
+
+export const submitForm = async (
+	accessToken: string,
+	details: SubmitDetails
+) => {
+	try {
+		const response = await fetch(`/api/submit-form`, {
+			method: "POST",
+			body: JSON.stringify({
+				formId: details.formId,
+				content: details.content,
+			}),
+		});
+
+		if (!response.ok) {
+			throw new Error(`Error: ${response.status}`);
+		}
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error("Failed to submit form:", error);
 		throw error;
 	}
 };

@@ -200,7 +200,7 @@ const EditDraftForm = ({
 							placeholder="Form title"
 							value={title ?? ""}
 							onChange={(e) => setTitle(e.target.value)}
-							className="text-4xl font-light w-full border-none focus:outline-none focus:ring-0 text-gray-400 placeholder:text-gray-400"
+							className="text-8xl font-extrabold w-full border-none focus:ring-0 focus:ring-offset-0 text-gray-400 "
 						/>
 					</form>
 					<Editor

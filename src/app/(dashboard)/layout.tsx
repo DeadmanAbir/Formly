@@ -9,15 +9,13 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<Provider>
-			<SidebarProvider>
-				<AppSidebar />
-				<main>
-					<SidebarTrigger />
-					<DashboardHeader />
-					{children}
-				</main>
-			</SidebarProvider>
-		</Provider>
+		<SidebarProvider>
+			<AppSidebar />
+			<main>
+				<SidebarTrigger />
+				<DashboardHeader />
+				{children}
+			</main>
+		</SidebarProvider>
 	);
 }

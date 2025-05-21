@@ -1,9 +1,7 @@
-import { Button } from "@/components/ui/button";
-import ViewForm from "@/components/view-form";
 import { cn } from "@/lib/utils";
-import { ArrowRight } from "lucide-react";
 import { notFound } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ClientFormSection from "@/components/ui/client-form-section";
 
 interface Props {
 	params: { slug: string };
@@ -42,13 +40,11 @@ export default async function FormPage({ params }: Props) {
 					: "Untitled"}
 			</h1>
 
-			<ViewForm data={res.data.content} />
-			<Button variant="default" className="mt-2">
-				{res.data.buttonLabel}
-				<span>
-					<ArrowRight />
-				</span>
-			</Button>
+			<ClientFormSection
+				data={res.data.content}
+				formId={slug}
+				buttonLabel={res.data.buttonLabel}
+			/>
 		</div>
 	);
 }
