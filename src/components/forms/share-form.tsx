@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Check, Copy } from "lucide-react";
 import { notFound, usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Integrations from "./integrations";
 import Submissions from "./submissions";
 
@@ -17,9 +17,14 @@ export default function ShareForm({
 	submissions?: string;
 }) {
 	const pathname = usePathname();
-	console.log(JSON.parse(submissions ?? ""));
 	const [copied, setCopied] = useState(false);
-	const url = window.location.origin;
+	const [url, setUrl] = useState("");
+
+	useEffect(() => {
+		if (typeof window !== "undefined") {
+			setUrl(window.location.origin);
+		}
+	}, []);
 
 	const handleCopy = () => {
 		const inputValue = `${url}/r/${pathname.split("/").slice(-2, -1)[0]}`;

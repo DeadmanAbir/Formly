@@ -7,6 +7,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { parseSubmissions } from "@/lib/helper";
+import { inputTypeIcons } from "../blocks/input-block";
 
 interface FormSubmission {
 	submittedAt: string;
@@ -18,6 +19,7 @@ interface ParsedSubmission {
 	responses: Array<{
 		question: string;
 		response: string;
+		icon: string;
 	}>;
 }
 
@@ -58,9 +60,19 @@ export default function Submissions({ submissions }: SubmissionsProps) {
 						<TableRow>
 							<TableHead>Submitted at</TableHead>
 							{submissionsList[0]?.responses.map(
-								(item: { question: string }, index: number) => (
-									<TableHead key={index}>{item.question}</TableHead>
-								)
+								(
+									item: { question: string; response: string; icon: string },
+									index: number
+								) => {
+									const IconComponent =
+										inputTypeIcons[item.icon as string] || Text;
+									return (
+										<TableHead key={index} className="flex items-center gap-1">
+											<IconComponent size={18} />
+											{item.question}
+										</TableHead>
+									);
+								}
 							)}
 						</TableRow>
 					</TableHeader>

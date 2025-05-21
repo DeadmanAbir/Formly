@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 // Map input types to their corresponding icons
-const inputTypeIcons: Record<string, LucideIcon> = {
+export const inputTypeIcons: Record<string, LucideIcon> = {
 	link: Link,
 	phone: Phone,
 	email: AtSign,
