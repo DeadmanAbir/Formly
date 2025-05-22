@@ -111,3 +111,23 @@ export const submitForm = async (
 		throw error;
 	}
 };
+
+export const getSubmissions = async (accessToken: string, details: string) => {
+	try {
+		const response = await fetch(`/api/get-submissions`, {
+			method: "GET",
+			headers: {
+				id: details,
+			},
+		});
+
+		if (!response.ok) {
+			throw new Error(`Error: ${response.status}`);
+		}
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error("Failed to get submissions:", error);
+		throw error;
+	}
+};

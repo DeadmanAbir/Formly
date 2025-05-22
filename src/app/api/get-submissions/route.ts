@@ -5,14 +5,14 @@ export async function GET(request: NextRequest) {
 	const prisma = new PrismaClient();
 	try {
 		const id = request.headers.get("id") as string;
-		const data = await prisma.form.findUnique({
+		const data = await prisma.submission.findMany({
 			where: {
-				id,
+				formId: id,
 			},
 		});
-		return NextResponse.json({ success: true, data });
+		return NextResponse.json({ success: true, data: JSON.stringify(data) });
 	} catch (err: any) {
-		console.error(`Error in feching form`, err);
+		console.error(`Error in feching submissions`, err);
 		return NextResponse.json(
 			{
 				success: false,

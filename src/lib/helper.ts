@@ -39,6 +39,9 @@ export function parseSubmission(input: string): {
 	responses: string[];
 	icon: string;
 }[] {
+	if (input === "") {
+		return [];
+	}
 	try {
 		const submissions: Submission[] = JSON.parse(input);
 

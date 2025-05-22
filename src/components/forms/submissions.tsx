@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/table";
 import { parseSubmission } from "@/lib/helper";
 import { inputTypeIcons } from "../blocks/input-block";
+import { getSubmissionsQuery } from "@/lib/tanstack-query/query";
 
 interface FormSubmission {
 	submittedAt: string;
@@ -24,11 +25,15 @@ interface ParsedSubmission {
 }
 
 interface SubmissionsProps {
-	submissions: string;
+	id: string;
 }
 
-export default function Submissions({ submissions }: SubmissionsProps) {
-	const questions = parseSubmission(submissions);
+export default function Submissions({ id }: SubmissionsProps) {
+	const { data: submissions, isPending } = getSubmissionsQuery(id);
+
+	if (isPending) return <div>Loading...</div>;
+
+	const questions = parseSubmission(isPending ? "" : submissions?.data ?? "");
 
 	return (
 		<div className="space-y-4">
@@ -44,12 +49,13 @@ export default function Submissions({ submissions }: SubmissionsProps) {
 						<span className="text-sm text-muted-foreground">
 							{(() => {
 								try {
-									const parsedData = JSON.parse(submissions || "[]");
+									const parsedData = JSON.parse(submissions.data || "[]");
 									return parsedData.length;
 								} catch {
 									return 0;
 								}
-							})()} submissions
+							})()}{" "}
+							submissions
 						</span>
 					</span>
 				</div>
@@ -58,11 +64,15 @@ export default function Submissions({ submissions }: SubmissionsProps) {
 				<Table>
 					<TableHeader>
 						<TableRow>
-							<TableHead>Submitted at</TableHead>
+							<TableHead className="border-r">Submitted at</TableHead>
 							{questions.map((item, index) => {
-								const IconComponent = inputTypeIcons[item.icon as string] || undefined;
+								const IconComponent =
+									inputTypeIcons[item.icon as string] || undefined;
 								return (
-									<TableHead key={index}>
+									<TableHead
+										key={index}
+										className={index < questions.length - 1 ? "border-r" : ""}
+									>
 										<div className="flex items-center gap-1">
 											{IconComponent && <IconComponent size={18} />}
 											<span>{item.question}</span>
@@ -76,7 +86,7 @@ export default function Submissions({ submissions }: SubmissionsProps) {
 						{(() => {
 							let parsedData = [];
 							try {
-								parsedData = JSON.parse(submissions || "[]");
+								parsedData = JSON.parse(submissions.data || "[]");
 							} catch {}
 							return parsedData.map((submission: any, respIdx: number) => {
 								// For each submission, parse its content and align answers with questions
@@ -86,14 +96,22 @@ export default function Submissions({ submissions }: SubmissionsProps) {
 									// For each question, find the corresponding input value in this submission
 									answers = questions.map((q) => {
 										// Find the input element with a value following the header with matching id
-										let found = "";
+										let found = "-";
 										let headerIdx = formElements.findIndex(
-											(el: any) => el.type === "header" && el.props.title === q.question
+											(el: any) =>
+												el.type === "header" && el.props.title === q.question
 										);
 										if (headerIdx !== -1) {
 											// Look for the next input after this header
-											for (let i = headerIdx + 1; i < formElements.length; i++) {
-												if (formElements[i].type === "input" && formElements[i].props.value) {
+											for (
+												let i = headerIdx + 1;
+												i < formElements.length;
+												i++
+											) {
+												if (
+													formElements[i].type === "input" &&
+													formElements[i].props.value
+												) {
 													found = formElements[i].props.value;
 													break;
 												}
@@ -104,19 +122,27 @@ export default function Submissions({ submissions }: SubmissionsProps) {
 								} catch {}
 								return (
 									<TableRow key={respIdx}>
-										<TableCell className="font-medium">
+										<TableCell className="font-medium border-r">
 											{submission.submittedAt
-												? new Date(submission.submittedAt).toLocaleString("en-US", {
-														month: "long",
-														day: "numeric",
-														hour: "numeric",
-														minute: "numeric",
-														hour12: true,
-													})
+												? new Date(submission.submittedAt).toLocaleString(
+														"en-US",
+														{
+															month: "long",
+															day: "numeric",
+															hour: "numeric",
+															minute: "numeric",
+															hour12: true,
+														}
+												  )
 												: ""}
 										</TableCell>
 										{answers.map((ans, idx) => (
-											<TableCell key={idx}>{ans}</TableCell>
+											<TableCell
+												key={idx}
+												className={idx < answers.length - 1 ? "border-r" : ""}
+											>
+												{ans}
+											</TableCell>
 										))}
 									</TableRow>
 								);

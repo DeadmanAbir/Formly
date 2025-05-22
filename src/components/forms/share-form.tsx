@@ -9,13 +9,7 @@ import { useEffect, useState } from "react";
 import Integrations from "./integrations";
 import Submissions from "./submissions";
 
-export default function ShareForm({
-	show,
-	submissions,
-}: {
-	show: boolean;
-	submissions?: string;
-}) {
+export default function ShareForm({ show }: { show: boolean }) {
 	const pathname = usePathname();
 	const [copied, setCopied] = useState(false);
 	const [url, setUrl] = useState("");
@@ -95,7 +89,7 @@ export default function ShareForm({
 						<Integrations />
 					</TabsContent>
 					<TabsContent value="submissions" className="mt-8">
-						<Submissions submissions={submissions ?? ""} />
+						<Submissions id={pathname.split("/").slice(-2, -1)[0]} />
 					</TabsContent>
 				</Tabs>
 			</div>
