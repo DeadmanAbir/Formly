@@ -94,3 +94,74 @@ export function parseSubmission(input: string): {
 		return [];
 	}
 }
+
+// Define the types for our data structure
+export type Response = {
+	text: string;
+	timestamp: Date;
+};
+
+export type QAItem = {
+	question: string;
+	responses: Response[];
+};
+
+// Create mock data that matches the structure in the image
+export const mockData: QAItem[] = [
+	{
+		question: "who are you?###",
+		responses: [
+			{
+				text: "Hi I am Abir Dutta",
+				timestamp: new Date(Date.now() - 21 * 60 * 60 * 1000), // 21 hours ago
+			},
+			{
+				text: "abir",
+				timestamp: new Date(2024, 4, 21, 10, 37), // May 21, 10:37 AM
+			},
+			{
+				text: "hi again I am. dutta",
+				timestamp: new Date(2024, 4, 21, 10, 22), // May 21, 10:22 AM
+			},
+			{
+				text: "Hi I am Abir Dutta",
+				timestamp: new Date(2024, 4, 21, 10, 21), // May 21, 10:21 AM
+			},
+		],
+	},
+	{
+		question: "what;s you name?",
+		responses: [
+			{
+				text: "vrvrverververvv",
+				timestamp: new Date(Date.now() - 21 * 60 * 60 * 1000), // 21 hours ago
+			},
+			{
+				text: "hii first one",
+				timestamp: new Date(2024, 4, 21, 10, 37), // May 21, 10:37 AM
+			},
+			{
+				text: "Dutta here guyssss",
+				timestamp: new Date(2024, 4, 21, 10, 22), // May 21, 10:22 AM
+			},
+		],
+	},
+	{
+		question: "number?",
+		responses: [
+			{
+				text: "+918017425026",
+				timestamp: new Date(Date.now() - 21 * 60 * 60 * 1000), // 21 hours ago
+			},
+		],
+	},
+	{
+		question: "q3",
+		responses: [
+			{
+				text: "q3 analysis",
+				timestamp: new Date(Date.now() - 21 * 60 * 60 * 1000), // 21 hours ago
+			},
+		],
+	},
+];
