@@ -8,6 +8,7 @@ import { notFound, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Integrations from "./integrations";
 import Submissions from "./submissions";
+import { getSubmissionsQuery } from "@/lib/tanstack-query/query";
 
 export default function ShareForm({ show }: { show: boolean }) {
 	const pathname = usePathname();
@@ -19,6 +20,9 @@ export default function ShareForm({ show }: { show: boolean }) {
 			setUrl(window.location.origin);
 		}
 	}, []);
+	const { data: submissionData, isPending } = getSubmissionsQuery(
+		pathname.split("/").slice(-2, -1)[0]
+	);
 
 	const handleCopy = () => {
 		const inputValue = `${url}/r/${pathname.split("/").slice(-2, -1)[0]}`;
@@ -35,6 +39,7 @@ export default function ShareForm({ show }: { show: boolean }) {
 	if (!show) {
 		notFound();
 	}
+
 	return (
 		<div className="flex justify-center items-center h-screen ">
 			<div className="container max-w-6xl pt-10">
@@ -89,7 +94,16 @@ export default function ShareForm({ show }: { show: boolean }) {
 						<Integrations />
 					</TabsContent>
 					<TabsContent value="submissions" className="mt-8">
-						<Submissions id={pathname.split("/").slice(-2, -1)[0]} />
+						<Submissions
+							submissions={submissionData?.data}
+							isPending={isPending}
+						/>
+					</TabsContent>
+					<TabsContent value="summary" className="mt-8">
+						<Submissions
+							submissions={submissionData?.data}
+							isPending={isPending}
+						/>
 					</TabsContent>
 				</Tabs>
 			</div>

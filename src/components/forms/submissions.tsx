@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/table";
 import { parseSubmission } from "@/lib/helper";
 import { inputTypeIcons } from "../blocks/input-block";
-import { getSubmissionsQuery } from "@/lib/tanstack-query/query";
 
 interface FormSubmission {
 	submittedAt: string;
@@ -25,15 +24,17 @@ interface ParsedSubmission {
 }
 
 interface SubmissionsProps {
-	id: string;
+	submissions: string;
+	isPending: boolean;
 }
 
-export default function Submissions({ id }: SubmissionsProps) {
-	const { data: submissions, isPending } = getSubmissionsQuery(id);
-
+export default function Submissions({
+	submissions,
+	isPending,
+}: SubmissionsProps) {
 	if (isPending) return <div>Loading...</div>;
 
-	const questions = parseSubmission(isPending ? "" : submissions?.data ?? "");
+	const questions = parseSubmission(isPending ? "" : submissions ?? "");
 
 	return (
 		<div className="space-y-4">
@@ -49,7 +50,7 @@ export default function Submissions({ id }: SubmissionsProps) {
 						<span className="text-sm text-muted-foreground">
 							{(() => {
 								try {
-									const parsedData = JSON.parse(submissions.data || "[]");
+									const parsedData = JSON.parse(submissions || "[]");
 									return parsedData.length;
 								} catch {
 									return 0;
@@ -86,7 +87,7 @@ export default function Submissions({ id }: SubmissionsProps) {
 						{(() => {
 							let parsedData = [];
 							try {
-								parsedData = JSON.parse(submissions.data || "[]");
+								parsedData = JSON.parse(submissions || "[]");
 							} catch {}
 							return parsedData.map((submission: any, respIdx: number) => {
 								// For each submission, parse its content and align answers with questions
