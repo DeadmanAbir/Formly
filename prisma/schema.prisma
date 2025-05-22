@@ -14,14 +14,23 @@ model User {
 }
 
 model Form {
-  id          String   @id
+  id          String       @id
   content     String?
   userId      String
   title       String?
-  buttonLabel String   @default("Submit")
-  bgColor     String   @default("bg-white")
+  buttonLabel String       @default("Submit")
+  bgColor     String       @default("bg-white")
   logoUrl     String?
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  published   Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  submissions Submission[] @relation
+}
+
+model Submission {
+  id          String   @id @default(uuid())
+  formId      String
+  form        Form     @relation(fields: [formId], references: [id], onDelete: Cascade)
+  content     String
+  submittedAt DateTime @default(now())
 }

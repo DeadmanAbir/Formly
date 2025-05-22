@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 // Map input types to their corresponding icons
-const inputTypeIcons: Record<string, LucideIcon> = {
+export const inputTypeIcons: Record<string, LucideIcon> = {
 	link: Link,
 	phone: Phone,
 	email: AtSign,
@@ -22,6 +22,16 @@ const inputTypeIcons: Record<string, LucideIcon> = {
 	long: AlignJustify,
 	text: Text,
 	// Add any additional input types here
+};
+
+const input_type: Record<string, string> = {
+	link: "url",
+	phone: "tel",
+	email: "email",
+	number: "number",
+	short: "text",
+	long: "text",
+	text: "text",
 };
 
 export const InputBlock = createReactBlockSpec(
@@ -50,6 +60,7 @@ export const InputBlock = createReactBlockSpec(
 						{/* URL input using ShadCN */}
 						<div className="flex items-center gap-2">
 							<Input
+								type={input_type[inputType]}
 								className="flex-1 border-none focus:ring-0 focus:ring-offset-0"
 								value={block.props.value}
 								placeholder="Type placeholder text"

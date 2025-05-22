@@ -1,8 +1,10 @@
+"use client";
 import { defaultProps } from "@blocknote/core";
 import { createReactBlockSpec } from "@blocknote/react";
 import { Input } from "@/components/ui/input";
-
+import { usePathname } from "next/navigation";
 // Create the Question block spec
+
 export const HeaderBlock = createReactBlockSpec(
 	{
 		type: "header",
@@ -11,14 +13,18 @@ export const HeaderBlock = createReactBlockSpec(
 			title: {
 				default: "",
 			},
+			id: {
+				default: "",
+			},
 		},
 		content: "none",
 	},
 	{
 		render: (props) => {
 			const { block, editor } = props;
+			const pathname = usePathname();
 			return (
-				<div className="flex items-center pb-2">
+				<div className="flex items-center pb-2 h-full font-[1000] text-gray-700 ">
 					<Input
 						type="text"
 						value={block.props.title || ""}
@@ -35,6 +41,7 @@ export const HeaderBlock = createReactBlockSpec(
 							});
 						}}
 						autoFocus={block.props.title === ""}
+						readOnly={pathname.startsWith("/r")}
 					/>
 				</div>
 			);
