@@ -1,38 +1,93 @@
-import { LucideIcon } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
+
+interface Submission {
+	id: string;
+	formId: string;
+	content: string; // JSON string containing FormElement[]
+	submittedAt: string;
+}
+
+// Output type
+interface ParsedQuestion {
+	question: string;
+	responses: string[];
+	icon: string;
+}
+
+interface FormElement {
+	id: string;
+	type: string;
+	props: {
+		id: string;
+		title?: string;
+		value?: string;
+		textAlignment?: string;
+		inputType?: string;
+		textColor?: string;
+		backgroundColor?: string;
+	};
+	content?: any[];
+	children: any[];
+}
 
 export function generateUUIDSegment(length = 6) {
 	return uuidv4().replace(/-/g, "").slice(0, length);
 }
 
-export const parseSubmissions = (
-	submissions: string
-): {
+export function parseSubmission(input: string): {
 	question: string;
-	response: string;
+	responses: string[];
 	icon: string;
-}[] => {
-	if (submissions === "") {
+}[] {
+	try {
+		const submissions: Submission[] = JSON.parse(input);
+
+		const questionMap = new Map<string, ParsedQuestion>();
+
+		submissions.forEach((submission) => {
+			const formElements: FormElement[] = JSON.parse(submission.content);
+
+			let currentHeaderId: string | null = null;
+			let currentQuestion: string | null = null;
+
+			formElements.forEach((element) => {
+				if (element.type === "header" && element.props.title) {
+					currentHeaderId = element.props.id;
+					currentQuestion = element.props.title;
+
+					// Initialize question in map if not exists
+					if (!questionMap.has(currentHeaderId)) {
+						questionMap.set(currentHeaderId, {
+							question: currentQuestion,
+							responses: [],
+							icon: "",
+						});
+					}
+				} else if (
+					element.type === "input" &&
+					element.props.value &&
+					currentHeaderId
+				) {
+					// Found an input (answer) following a header
+					const questionData = questionMap.get(currentHeaderId);
+					if (questionData && element.props.value.trim() !== "") {
+						// Add response if it's not empty and not already present
+						if (!questionData.responses.includes(element.props.value)) {
+							questionData.responses.push(element.props.value);
+						}
+						// Set icon from inputType
+						if (element.props.inputType && !questionData.icon) {
+							questionData.icon = element.props.inputType;
+						}
+					}
+				}
+			});
+		});
+
+		// Convert map to array
+		return Array.from(questionMap.values());
+	} catch (error) {
+		console.error("Error parsing submission:", error);
 		return [];
 	}
-	const parsedData = JSON.parse(submissions);
-	let parsedSubmissions: {
-		question: string;
-		response: string;
-		icon: string;
-	}[] = [];
-	for (let i = 0; i < parsedData.length; i++) {
-		const content = JSON.parse(parsedData[i].content);
-		for (let j = 0; j < content.length; j++) {
-			if (content[j].type === "header") {
-				parsedSubmissions.push({
-					question: content[j].props.title,
-					response: content[j + 1].props.value,
-					icon: content[j + 1].props.inputType,
-				});
-				j++;
-			}
-		}
-	}
-	return parsedSubmissions;
-};
+}

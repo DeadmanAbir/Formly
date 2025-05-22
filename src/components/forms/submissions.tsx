@@ -6,7 +6,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { parseSubmissions } from "@/lib/helper";
+import { parseSubmission } from "@/lib/helper";
 import { inputTypeIcons } from "../blocks/input-block";
 
 interface FormSubmission {
@@ -28,13 +28,7 @@ interface SubmissionsProps {
 }
 
 export default function Submissions({ submissions }: SubmissionsProps) {
-	const parsedData = JSON.parse(submissions || "[]");
-	const submissionsList: ParsedSubmission[] = parsedData.map(
-		(submission: FormSubmission) => ({
-			submittedAt: submission.submittedAt,
-			responses: parseSubmissions(submissions),
-		})
-	);
+	const questions = parseSubmission(submissions);
 
 	return (
 		<div className="space-y-4">
@@ -48,57 +42,86 @@ export default function Submissions({ submissions }: SubmissionsProps) {
 				<div className="flex items-center space-x-2">
 					<span className="flex items-center space-x-1">
 						<span className="text-sm text-muted-foreground">
-							{submissionsList.length} submissions
+							{(() => {
+								try {
+									const parsedData = JSON.parse(submissions || "[]");
+									return parsedData.length;
+								} catch {
+									return 0;
+								}
+							})()} submissions
 						</span>
 					</span>
 				</div>
 			</div>
-
 			<div className="rounded-md border">
 				<Table>
 					<TableHeader>
 						<TableRow>
 							<TableHead>Submitted at</TableHead>
-							{submissionsList[0]?.responses.map(
-								(
-									item: { question: string; response: string; icon: string },
-									index: number
-								) => {
-									const IconComponent =
-										inputTypeIcons[item.icon as string] || Text;
-									return (
-										<TableHead key={index}>
-											<div className="flex items-center gap-1">
-												<IconComponent size={18} />
-												<span>{item.question}</span>
-											</div>
-										</TableHead>
-									);
-								}
-							)}
+							{questions.map((item, index) => {
+								const IconComponent = inputTypeIcons[item.icon as string] || undefined;
+								return (
+									<TableHead key={index}>
+										<div className="flex items-center gap-1">
+											{IconComponent && <IconComponent size={18} />}
+											<span>{item.question}</span>
+										</div>
+									</TableHead>
+								);
+							})}
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{submissionsList.map(
-							(submission: ParsedSubmission, index: number) => (
-								<TableRow key={index}>
-									<TableCell className="font-medium">
-										{new Date(submission.submittedAt).toLocaleString("en-US", {
-											month: "long",
-											day: "numeric",
-											hour: "numeric",
-											minute: "numeric",
-											hour12: true,
-										})}
-									</TableCell>
-									{submission.responses.map(
-										(item: { response: string }, idx: number) => (
-											<TableCell key={idx}>{item.response}</TableCell>
-										)
-									)}
-								</TableRow>
-							)
-						)}
+						{(() => {
+							let parsedData = [];
+							try {
+								parsedData = JSON.parse(submissions || "[]");
+							} catch {}
+							return parsedData.map((submission: any, respIdx: number) => {
+								// For each submission, parse its content and align answers with questions
+								let answers: string[] = [];
+								try {
+									const formElements = JSON.parse(submission.content || "[]");
+									// For each question, find the corresponding input value in this submission
+									answers = questions.map((q) => {
+										// Find the input element with a value following the header with matching id
+										let found = "";
+										let headerIdx = formElements.findIndex(
+											(el: any) => el.type === "header" && el.props.title === q.question
+										);
+										if (headerIdx !== -1) {
+											// Look for the next input after this header
+											for (let i = headerIdx + 1; i < formElements.length; i++) {
+												if (formElements[i].type === "input" && formElements[i].props.value) {
+													found = formElements[i].props.value;
+													break;
+												}
+											}
+										}
+										return found;
+									});
+								} catch {}
+								return (
+									<TableRow key={respIdx}>
+										<TableCell className="font-medium">
+											{submission.submittedAt
+												? new Date(submission.submittedAt).toLocaleString("en-US", {
+														month: "long",
+														day: "numeric",
+														hour: "numeric",
+														minute: "numeric",
+														hour12: true,
+													})
+												: ""}
+										</TableCell>
+										{answers.map((ans, idx) => (
+											<TableCell key={idx}>{ans}</TableCell>
+										))}
+									</TableRow>
+								);
+							});
+						})()}
 					</TableBody>
 				</Table>
 			</div>

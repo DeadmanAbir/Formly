@@ -19,7 +19,6 @@ export default async function FormPage({ params }: Props) {
 	const submissions = data?.data
 		? JSON.stringify(data.data.submissions)
 		: undefined;
-
 	if (slug[1] === "edit") {
 		return <EditForm uuid={slug[0]} formData={formData} />;
 	} else if (slug[1] === "share") {

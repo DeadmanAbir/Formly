@@ -1,5 +1,6 @@
 import { AlignJustify, AtSign, Hash, Layers2, Link, Phone } from "lucide-react";
 import { CustomBlockNoteEditor } from "@/lib/types";
+import { generateUUIDSegment } from "./helper";
 
 // Function to create a header + input block combination
 const createQuestionBlock = (
@@ -12,6 +13,7 @@ const createQuestionBlock = (
 				type: "header",
 				props: {
 					title: "",
+					id: generateUUIDSegment(),
 				},
 			},
 			{
