@@ -28,13 +28,33 @@ interface SubmissionsProps {
 	isPending: boolean;
 }
 
-export default function Submissions({
-	submissions,
-	isPending,
-}: SubmissionsProps) {
+export const Submissions = ({ submissions, isPending }: SubmissionsProps) => {
 	if (isPending) return <div>Loading...</div>;
 
 	const questions = parseSubmission(isPending ? "" : submissions ?? "");
+
+	const allSubmissions: string[] = [];
+
+	try {
+		const rawSubmissions = JSON.parse(submissions || "[]");
+		rawSubmissions.forEach((submission: any) => {
+			if (submission.submittedAt) {
+				allSubmissions.push(submission.submittedAt);
+			}
+		});
+	} catch {
+		questions.forEach((question) => {
+			question.responses.forEach((response) => {
+				if (!allSubmissions.includes(response.submittedAt)) {
+					allSubmissions.push(response.submittedAt);
+				}
+			});
+		});
+	}
+
+	const sortedSubmissions = allSubmissions.sort(
+		(a, b) => new Date(b).getTime() - new Date(a).getTime()
+	);
 
 	return (
 		<div className="space-y-4">
@@ -48,15 +68,7 @@ export default function Submissions({
 				<div className="flex items-center space-x-2">
 					<span className="flex items-center space-x-1">
 						<span className="text-sm text-muted-foreground">
-							{(() => {
-								try {
-									const parsedData = JSON.parse(submissions || "[]");
-									return parsedData.length;
-								} catch {
-									return 0;
-								}
-							})()}{" "}
-							submissions
+							{sortedSubmissions.length} submissions
 						</span>
 					</span>
 				</div>
@@ -84,74 +96,45 @@ export default function Submissions({
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{(() => {
-							let parsedData = [];
-							try {
-								parsedData = JSON.parse(submissions || "[]");
-							} catch {}
-							return parsedData.map((submission: any, respIdx: number) => {
-								// For each submission, parse its content and align answers with questions
-								let answers: string[] = [];
-								try {
-									const formElements = JSON.parse(submission.content || "[]");
-									// For each question, find the corresponding input value in this submission
-									answers = questions.map((q) => {
-										// Find the input element with a value following the header with matching id
-										let found = "-";
-										let headerIdx = formElements.findIndex(
-											(el: any) =>
-												el.type === "header" && el.props.title === q.question
-										);
-										if (headerIdx !== -1) {
-											// Look for the next input after this header
-											for (
-												let i = headerIdx + 1;
-												i < formElements.length;
-												i++
-											) {
-												if (
-													formElements[i].type === "input" &&
-													formElements[i].props.value
-												) {
-													found = formElements[i].props.value;
-													break;
-												}
+						{sortedSubmissions.map((submissionTime, rowIndex) => (
+							<TableRow key={rowIndex}>
+								<TableCell className="font-medium border-r">
+									{new Date(submissionTime).toLocaleString("en-US", {
+										month: "long",
+										day: "numeric",
+										hour: "numeric",
+										minute: "numeric",
+										hour12: true,
+									})}
+								</TableCell>
+								{questions.map((question, colIndex) => {
+									const responseIndex =
+										sortedSubmissions
+											.slice(0, rowIndex + 1)
+											.filter((time) => time === submissionTime).length - 1;
+									const responsesAtThisTime = question.responses.filter(
+										(r) => r.submittedAt === submissionTime
+									);
+									const response =
+										responsesAtThisTime[responseIndex] ||
+										responsesAtThisTime[0];
+
+									return (
+										<TableCell
+											key={colIndex}
+											className={
+												colIndex < questions.length - 1 ? "border-r" : ""
 											}
-										}
-										return found;
-									});
-								} catch {}
-								return (
-									<TableRow key={respIdx}>
-										<TableCell className="font-medium border-r">
-											{submission.submittedAt
-												? new Date(submission.submittedAt).toLocaleString(
-														"en-US",
-														{
-															month: "long",
-															day: "numeric",
-															hour: "numeric",
-															minute: "numeric",
-															hour12: true,
-														}
-												  )
-												: ""}
+										>
+											{response ? response.answer : "-"}
 										</TableCell>
-										{answers.map((ans, idx) => (
-											<TableCell
-												key={idx}
-												className={idx < answers.length - 1 ? "border-r" : ""}
-											>
-												{ans}
-											</TableCell>
-										))}
-									</TableRow>
-								);
-							});
-						})()}
+									);
+								})}
+							</TableRow>
+						))}
 					</TableBody>
 				</Table>
 			</div>
 		</div>
 	);
-}
+};

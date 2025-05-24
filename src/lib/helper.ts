@@ -1,28 +1,26 @@
 import { v4 as uuidv4 } from "uuid";
 
+export function generateUUIDSegment(length = 6) {
+	return uuidv4().replace(/-/g, "").slice(0, length);
+}
+
+// Updated types to match the new structure
 interface Submission {
 	id: string;
 	formId: string;
-	content: string; // JSON string containing FormElement[]
+	content: string;
 	submittedAt: string;
-}
-
-// Output type
-interface ParsedQuestion {
-	question: string;
-	responses: string[];
-	icon: string;
 }
 
 interface FormElement {
 	id: string;
 	type: string;
 	props: {
-		id: string;
+		id?: string;
 		title?: string;
 		value?: string;
-		textAlignment?: string;
 		inputType?: string;
+		textAlignment?: string;
 		textColor?: string;
 		backgroundColor?: string;
 	};
@@ -30,18 +28,21 @@ interface FormElement {
 	children: any[];
 }
 
-export function generateUUIDSegment(length = 6) {
-	return uuidv4().replace(/-/g, "").slice(0, length);
+interface ParsedQuestion {
+	question: string;
+	responses: { answer: string; submittedAt: string }[];
+	icon: string;
 }
 
 export function parseSubmission(input: string): {
 	question: string;
-	responses: string[];
+	responses: { answer: string; submittedAt: string }[];
 	icon: string;
 }[] {
 	if (input === "") {
 		return [];
 	}
+
 	try {
 		const submissions: Submission[] = JSON.parse(input);
 
@@ -49,9 +50,10 @@ export function parseSubmission(input: string): {
 
 		submissions.forEach((submission) => {
 			const formElements: FormElement[] = JSON.parse(submission.content);
+			const submittedAt = submission.submittedAt;
 
-			let currentHeaderId: string | null = null;
-			let currentQuestion: string | null = null;
+			let currentHeaderId: string | undefined = undefined;
+			let currentQuestion: string | undefined = undefined;
 
 			formElements.forEach((element) => {
 				if (element.type === "header" && element.props.title) {
@@ -59,8 +61,8 @@ export function parseSubmission(input: string): {
 					currentQuestion = element.props.title;
 
 					// Initialize question in map if not exists
-					if (!questionMap.has(currentHeaderId)) {
-						questionMap.set(currentHeaderId, {
+					if (!questionMap.has(currentHeaderId!)) {
+						questionMap.set(currentHeaderId!, {
 							question: currentQuestion,
 							responses: [],
 							icon: "",
@@ -74,11 +76,12 @@ export function parseSubmission(input: string): {
 					// Found an input (answer) following a header
 					const questionData = questionMap.get(currentHeaderId);
 					if (questionData && element.props.value.trim() !== "") {
-						// Add response if it's not empty and not already present
-						if (!questionData.responses.includes(element.props.value)) {
-							questionData.responses.push(element.props.value);
-						}
-						// Set icon from inputType
+						// Add response with submittedAt timestamp
+						questionData.responses.push({
+							answer: element.props.value,
+							submittedAt: submittedAt,
+						});
+
 						if (element.props.inputType && !questionData.icon) {
 							questionData.icon = element.props.inputType;
 						}
@@ -87,81 +90,9 @@ export function parseSubmission(input: string): {
 			});
 		});
 
-		// Convert map to array
 		return Array.from(questionMap.values());
 	} catch (error) {
 		console.error("Error parsing submission:", error);
 		return [];
 	}
 }
-
-// Define the types for our data structure
-export type Response = {
-	text: string;
-	timestamp: Date;
-};
-
-export type QAItem = {
-	question: string;
-	responses: Response[];
-};
-
-// Create mock data that matches the structure in the image
-export const mockData: QAItem[] = [
-	{
-		question: "who are you?###",
-		responses: [
-			{
-				text: "Hi I am Abir Dutta",
-				timestamp: new Date(Date.now() - 21 * 60 * 60 * 1000), // 21 hours ago
-			},
-			{
-				text: "abir",
-				timestamp: new Date(2024, 4, 21, 10, 37), // May 21, 10:37 AM
-			},
-			{
-				text: "hi again I am. dutta",
-				timestamp: new Date(2024, 4, 21, 10, 22), // May 21, 10:22 AM
-			},
-			{
-				text: "Hi I am Abir Dutta",
-				timestamp: new Date(2024, 4, 21, 10, 21), // May 21, 10:21 AM
-			},
-		],
-	},
-	{
-		question: "what;s you name?",
-		responses: [
-			{
-				text: "vrvrverververvv",
-				timestamp: new Date(Date.now() - 21 * 60 * 60 * 1000), // 21 hours ago
-			},
-			{
-				text: "hii first one",
-				timestamp: new Date(2024, 4, 21, 10, 37), // May 21, 10:37 AM
-			},
-			{
-				text: "Dutta here guyssss",
-				timestamp: new Date(2024, 4, 21, 10, 22), // May 21, 10:22 AM
-			},
-		],
-	},
-	{
-		question: "number?",
-		responses: [
-			{
-				text: "+918017425026",
-				timestamp: new Date(Date.now() - 21 * 60 * 60 * 1000), // 21 hours ago
-			},
-		],
-	},
-	{
-		question: "q3",
-		responses: [
-			{
-				text: "q3 analysis",
-				timestamp: new Date(Date.now() - 21 * 60 * 60 * 1000), // 21 hours ago
-			},
-		],
-	},
-];
