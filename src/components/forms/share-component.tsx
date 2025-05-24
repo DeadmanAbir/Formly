@@ -19,7 +19,7 @@ const ShareComponent = ({ placeholderUrl }: { placeholderUrl: string }) => {
 	};
 
 	return (
-		<div className="max-w-2xl mx-auto">
+		<div className="max-w-2xl">
 			<h1 className="text-2xl font-semibold mb-4">Share Link</h1>
 			<p className="text-gray-600 mb-8">
 				Your form is now published and ready to be shared with the world! Copy

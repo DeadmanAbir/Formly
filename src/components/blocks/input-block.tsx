@@ -62,8 +62,11 @@ export const InputBlock = createReactBlockSpec(
 							<Input
 								type={input_type[inputType]}
 								className="flex-1 border-none focus:ring-0 focus:ring-offset-0"
-								value={block.props.value}
-								placeholder="Type placeholder text"
+								placeholder={
+									block.props.value === ""
+										? "Type placeholder text"
+										: block.props.value
+								}
 								onChange={(e) => {
 									editor.updateBlock(block, {
 										props: { value: e.target.value },
