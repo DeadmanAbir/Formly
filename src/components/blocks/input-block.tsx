@@ -59,20 +59,22 @@ export const InputBlock = createReactBlockSpec(
 					<div className="flex flex-col gap-2">
 						{/* URL input using ShadCN */}
 						<div className="flex items-center gap-2">
-							<Input
-								type={input_type[inputType]}
-								className="flex-1 border-none focus:ring-0 focus:ring-offset-0"
-								placeholder={
-									block.props.value === ""
-										? "Type placeholder text"
-										: block.props.value
-								}
-								onChange={(e) => {
-									editor.updateBlock(block, {
-										props: { value: e.target.value },
-									});
-								}}
-							/>
+							<form>
+								<Input
+									type={input_type[inputType]}
+									className="flex-1 border-none focus:ring-0 focus:ring-offset-0"
+									placeholder={
+										block.props.value === ""
+											? "Type placeholder text"
+											: block.props.value
+									}
+									onChange={(e) => {
+										editor.updateBlock(block, {
+											props: { value: e.target.value },
+										});
+									}}
+								/>
+							</form>
 							<IconComponent size={28} />
 						</div>
 					</div>
