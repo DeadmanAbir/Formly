@@ -131,3 +131,69 @@ export const getSubmissions = async (accessToken: string, details: string) => {
 		throw error;
 	}
 };
+
+export const deleteForm = async (accessToken: string, details: string) => {
+	try {
+		const response = await fetch(`/api/delete-form`, {
+			method: "DELETE",
+			headers: {
+				id: details,
+			},
+		});
+
+		if (!response.ok) {
+			throw new Error(`Error: ${response.status}`);
+		}
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error("Failed to delete form:", error);
+		throw error;
+	}
+};
+
+export const duplicateForm = async (accessToken: string, details: string) => {
+	try {
+		const response = await fetch(`/api/duplicate-form`, {
+			method: "POST",
+			headers: {
+				id: details,
+			},
+		});
+
+		if (!response.ok) {
+			throw new Error(`Error: ${response.status}`);
+		}
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error("Failed to duplicate form:", error);
+		throw error;
+	}
+};
+
+export const renameForm = async (
+	accessToken: string,
+	details: { id: string; title: string }
+) => {
+	try {
+		const response = await fetch(`/api/rename-form`, {
+			method: "PATCH",
+			headers: {
+				id: details.id,
+			},
+			body: JSON.stringify({
+				title: details.title,
+			}),
+		});
+
+		if (!response.ok) {
+			throw new Error(`Error: ${response.status}`);
+		}
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error("Failed to rename form:", error);
+		throw error;
+	}
+};

@@ -1,6 +1,12 @@
 "use client";
 import { useMutation } from "@tanstack/react-query";
-import { insertForm, submitForm } from "../api";
+import {
+	deleteForm,
+	duplicateForm,
+	insertForm,
+	renameForm,
+	submitForm,
+} from "../api";
 
 interface FormDetail {
 	userId: string;
@@ -30,6 +36,28 @@ export const insertFormFn = (accessToken: string, options = {}) => {
 export const submitFormFn = (accessToken: string, options = {}) => {
 	return useMutation({
 		mutationFn: (details: SubmitDetails) => submitForm(accessToken!, details),
+		...options,
+	});
+};
+
+export const deleteFormFn = (accessToken: string, options = {}) => {
+	return useMutation({
+		mutationFn: (details: string) => deleteForm(accessToken!, details),
+		...options,
+	});
+};
+
+export const duplicateFormFn = (accessToken: string, options = {}) => {
+	return useMutation({
+		mutationFn: (details: string) => duplicateForm(accessToken!, details),
+		...options,
+	});
+};
+
+export const renameFormFn = (accessToken: string, options = {}) => {
+	return useMutation({
+		mutationFn: (details: { id: string; title: string }) =>
+			renameForm(accessToken!, details),
 		...options,
 	});
 };
