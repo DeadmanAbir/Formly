@@ -1,18 +1,26 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { DashboardHeader } from "@/components/dashboard-header";
-import { Provider } from "@/lib/provider";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-export default function RootLayout({
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+export default async function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
+
+	if (!session) {
+		return redirect("/onboard");
+	}
+
 	return (
 		<SidebarProvider>
 			<AppSidebar />
 			<main className="w-full">
-				<SidebarTrigger />
 				<DashboardHeader />
 				{children}
 			</main>
