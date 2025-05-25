@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@better-fetch/fetch':
+        specifier: ^1.1.18
+        version: 1.1.18
       '@blocknote/code-block':
         specifier: ^0.30.0
         version: 0.30.0(@blocknote/core@0.30.0(@types/hast@3.0.4))

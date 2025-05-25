@@ -1,4 +1,12 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+"use client";
+import {
+	Calendar,
+	Home,
+	Inbox,
+	ListCollapse,
+	Search,
+	Settings,
+} from "lucide-react";
 
 import {
 	Sidebar,
@@ -9,9 +17,17 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
+	useSidebar,
 } from "@/components/ui/sidebar";
 
 import Logout from "./auth/logout";
+import { Button } from "./ui/button";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "./ui/tooltip";
 
 // Menu items.
 const items = [
@@ -43,13 +59,33 @@ const items = [
 ];
 
 export function AppSidebar() {
+	const { toggleSidebar } = useSidebar();
 	return (
 		<Sidebar>
 			<SidebarContent>
 				<SidebarGroup>
-					<SidebarGroupLabel>Application</SidebarGroupLabel>
+					<div className="flex items-center justify-between">
+						<SidebarGroupLabel>Application</SidebarGroupLabel>
+						<TooltipProvider>
+							<Tooltip>
+								<TooltipTrigger asChild>
+									<Button
+										variant="ghost"
+										size="icon"
+										className="cursor-pointer"
+										onClick={toggleSidebar}
+									>
+										<ListCollapse />
+									</Button>
+								</TooltipTrigger>
+								<TooltipContent side="right">
+									<p className="text-md">close sidebar</p>
+								</TooltipContent>
+							</Tooltip>
+						</TooltipProvider>
+					</div>
 					<SidebarGroupContent>
-						<SidebarMenu>
+						<SidebarMenu className="mt-2">
 							{items.map((item) => (
 								<SidebarMenuItem key={item.title}>
 									<SidebarMenuButton asChild>
@@ -60,7 +96,9 @@ export function AppSidebar() {
 									</SidebarMenuButton>
 								</SidebarMenuItem>
 							))}
-							<Logout />
+							<SidebarMenuButton asChild>
+								<Logout />
+							</SidebarMenuButton>
 						</SidebarMenu>
 					</SidebarGroupContent>
 				</SidebarGroup>

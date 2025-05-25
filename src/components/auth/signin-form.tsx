@@ -27,8 +27,7 @@ export default function SignInForm({ onToggle }: { onToggle: () => void }) {
 			},
 			{
 				onSuccess: (ctx) => {
-					//redirect to the dashboard or sign in page
-					console.log(data);
+					alert(ctx.data);
 					router.push("/dashboard");
 				},
 				onError: (ctx) => {

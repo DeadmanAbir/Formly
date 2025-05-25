@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@better-fetch/fetch": "^1.1.18",
     "@blocknote/code-block": "^0.30.0",
     "@blocknote/core": "^0.30.0",
     "@blocknote/mantine": "^0.30.0",
