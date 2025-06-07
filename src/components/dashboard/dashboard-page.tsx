@@ -16,13 +16,13 @@ export default function DashboardPage() {
 
 	if (!isPending && (!formsData || formsData.length === 0)) {
 		return (
-			<div className="flex flex-col items-center justify-center min-h-screen max-w-md mx-auto px-4">
+			<div className="flex items-center justify-center min-h-[calc(100vh-40px)] px-4">
 				<EmptyState uuid={uuid} />
 			</div>
 		);
 	}
 	return (
-		<div className="flex flex-col items-center justify-center min-h-screen max-w-md mx-auto px-4">
+		<div className=" flex flex-col items-center justify-center min-h-screen max-w-md mx-auto px-4">
 			<FormsPage formsData={formsData} uuid={uuid} />
 		</div>
 	);
