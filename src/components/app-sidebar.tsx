@@ -3,7 +3,6 @@ import {
 	Calendar,
 	Home,
 	Inbox,
-	ListCollapse,
 	PanelLeftClose,
 	Search,
 	Settings,

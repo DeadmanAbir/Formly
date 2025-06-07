@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { Button } from "../ui/button";
+import Image from "next/image";
 
 const EmptyState = ({ uuid }: { uuid: string }) => {
 	return (
 		<div className="text-center space-y-6">
 			{/* Illustration */}
-			<div className="relative w-24 h-24 mx-auto mb-2">
-				<svg
+			<div className="relative  mx-auto mb-2">
+				{/* <svg
 					viewBox="0 0 24 24"
 					fill="none"
 					stroke="currentColor"
@@ -18,7 +19,13 @@ const EmptyState = ({ uuid }: { uuid: string }) => {
 						strokeWidth={1.5}
 						d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
 					/>
-				</svg>
+				</svg> */}
+				<Image
+					src="/empty-state.png"
+					alt="empty-state"
+					width={300}
+					height={300}
+				/>
 			</div>
 
 			{/* Text content */}

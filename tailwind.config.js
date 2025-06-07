@@ -60,7 +60,10 @@ module.exports = {
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
   			}
-  		}
+  		},
+		  fontFamily: {
+			sans: ['var(--font-inter)', 'sans-serif'],
+		  }
   	}
   },
   plugins: [require("tailwindcss-animate")],

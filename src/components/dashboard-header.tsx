@@ -1,5 +1,5 @@
 "use client";
-import { PanelRightClose } from "lucide-react";
+import { PanelRightClose, Search, Settings } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { usePathname } from "next/navigation";
@@ -10,6 +10,7 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import Link from "next/link";
 export const DashboardHeader = () => {
 	const pathname = usePathname();
 	const isEditPage = pathname.split("/").pop() === "edit";
@@ -19,32 +20,40 @@ export const DashboardHeader = () => {
 	}
 
 	return (
-		<div className="flex flex-row gap-4 items-center justify-between">
-			{!open && (
-				<>
-					<TooltipProvider>
-						<Tooltip>
-							<TooltipTrigger asChild>
-								<Button
-									variant="ghost"
-									size="icon"
-									className="cursor-pointer"
-									onClick={toggleSidebar}
-								>
-									<PanelRightClose />
-								</Button>
-							</TooltipTrigger>
-							<TooltipContent side="right">
-								<p className="text-md">open sidebar</p>
-							</TooltipContent>
-						</Tooltip>
-					</TooltipProvider>
-				</>
-			)}
-			<Input placeholder="Enter text here" className="border p-2" />
-			<Button variant="default" size="default">
-				Submit
-			</Button>
+		<div className="flex flex-row items-center justify-between">
+			<div className="flex items-center">
+				{!open && (
+					<div className="items-start">
+						<TooltipProvider>
+							<Tooltip>
+								<TooltipTrigger asChild>
+									<Button
+										variant="ghost"
+										size="icon"
+										className="cursor-pointer"
+										onClick={toggleSidebar}
+									>
+										<PanelRightClose />
+									</Button>
+								</TooltipTrigger>
+								<TooltipContent side="right">
+									<p className="text-md">open sidebar</p>
+								</TooltipContent>
+							</Tooltip>
+						</TooltipProvider>
+					</div>
+				)}
+			</div>
+
+			<div className="flex items-center space-x-2">
+				<Button variant="ghost" size="default" className="p-2 m-2 ">
+					<Search />
+					Search
+				</Button>
+				<Link href="/dashboard">
+					<Settings size={20} className="mr-2" />
+				</Link>
+			</div>
 		</div>
 	);
 };
