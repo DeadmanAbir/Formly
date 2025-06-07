@@ -1,5 +1,5 @@
 "use client";
-import { ListCollapse } from "lucide-react";
+import { PanelRightClose } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { usePathname } from "next/navigation";
@@ -31,11 +31,11 @@ export const DashboardHeader = () => {
 									className="cursor-pointer"
 									onClick={toggleSidebar}
 								>
-									<ListCollapse />
+									<PanelRightClose />
 								</Button>
 							</TooltipTrigger>
 							<TooltipContent side="right">
-								<p className="text-md">close sidebar</p>
+								<p className="text-md">open sidebar</p>
 							</TooltipContent>
 						</Tooltip>
 					</TooltipProvider>

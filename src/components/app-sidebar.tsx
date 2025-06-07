@@ -4,6 +4,7 @@ import {
 	Home,
 	Inbox,
 	ListCollapse,
+	PanelLeftClose,
 	Search,
 	Settings,
 } from "lucide-react";
@@ -75,7 +76,7 @@ export function AppSidebar() {
 										className="cursor-pointer"
 										onClick={toggleSidebar}
 									>
-										<ListCollapse />
+										<PanelLeftClose />
 									</Button>
 								</TooltipTrigger>
 								<TooltipContent side="right">
