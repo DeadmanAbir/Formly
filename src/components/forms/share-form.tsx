@@ -20,6 +20,7 @@ export default function ShareForm({ show }: { show: boolean }) {
 			setUrl(window.location.origin);
 		}
 	}, []);
+
 	const { data: submissionData, isPending } = getSubmissionsQuery(
 		pathname.split("/").slice(-2, -1)[0]
 	);

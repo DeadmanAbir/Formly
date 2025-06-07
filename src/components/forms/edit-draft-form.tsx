@@ -31,7 +31,7 @@ const EditDraftForm = ({
 	uuid: string;
 }) => {
 	const [draftSaved, setDraftSaved] = useState(false);
-	const [showOptions, setShowOptions] = useState<boolean>(false);
+	const [showOptions, setShowOptions] = useState<boolean>(true);
 	const [showPreview, setShowPreview] = useState<boolean>(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [showCoverModal, setShowCoverModal] = useState(false);
@@ -127,7 +127,7 @@ const EditDraftForm = ({
 				draftSaved={draftSaved}
 			/>
 
-			{showOptions ? (
+			{showOptions && !formData ? (
 				<FormsOptions />
 			) : (
 				<div className="flex flex-col items-center justify-center h-screen space-y-4">
