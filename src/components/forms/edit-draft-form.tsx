@@ -1,5 +1,4 @@
 "use client";
-import { PartialBlock } from "@blocknote/core";
 import { useState, useEffect } from "react";
 import { Button } from "../ui/button";
 import { FormHeader } from "./form-header";

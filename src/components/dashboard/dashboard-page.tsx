@@ -22,7 +22,7 @@ export default function DashboardPage() {
 		);
 	}
 	return (
-		<div className=" flex flex-col items-center justify-center min-h-screen max-w-md mx-auto px-4">
+		<div className=" flex   justify-between">
 			<FormsPage formsData={formsData} uuid={uuid} />
 		</div>
 	);

@@ -1,7 +1,17 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Pencil, X } from "lucide-react";
+import {
+	Copy,
+	FolderPlus,
+	MoreHorizontal,
+	Pencil,
+	PencilLine,
+	Plus,
+	Tag,
+	Trash2,
+	X,
+} from "lucide-react";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -25,6 +35,8 @@ import {
 } from "@/lib/tanstack-query/mutation";
 import { useQueryClient } from "@tanstack/react-query";
 import React from "react";
+import { Separator } from "../ui/separator";
+import { Badge } from "../ui/badge";
 
 interface FormsPageProps {
 	formsData: any;
@@ -89,27 +101,36 @@ export const FormsPage: React.FC<FormsPageProps> = ({ formsData, uuid }) => {
 	};
 
 	return (
-		<>
-			<div className="w-full space-y-4">
-				<div className="flex items-center justify-between">
-					<h1 className="text-2xl font-bold">Home</h1>
-					<div className="flex items-center gap-2">
-						<Button variant="outline">New workspace</Button>
-						<Button
-							onClick={() => {
-								router.push(`/forms/${uuid}/edit`);
-							}}
-						>
-							New form
-						</Button>
+		<div className="w-full ">
+			<div className="space-y-4 py-10">
+				<>
+					<div className="flex items-center justify-between px-4">
+						<h1 className="text-2xl font-bold">Home</h1>
+						<div className="flex items-center gap-2">
+							<Button variant="ghost">
+								<FolderPlus />
+								New workspace
+							</Button>
+							<Button
+								onClick={() => {
+									router.push(`/forms/${uuid}/edit`);
+								}}
+								variant="default"
+								className="bg-blue-600 hover:bg-blue-700 text-white"
+							>
+								<Plus />
+								New form
+							</Button>
+						</div>
 					</div>
-				</div>
+					<Separator className="w-full mt-2 bg-slate-300" />
+				</>
 
 				<div className="grid gap-4">
 					{formsData.map((form: any) => (
 						<div
 							key={form.id}
-							className="flex items-center justify-between border rounded-lg p-4"
+							className="flex items-center justify-between  py-4 px-4"
 						>
 							{form.published ? (
 								<Link href={`/forms/${form.id}/share`} className="flex-1">
@@ -119,9 +140,12 @@ export const FormsPage: React.FC<FormsPageProps> = ({ formsData, uuid }) => {
 												{form.title ?? "Untitled"}
 											</h2>
 											{!form.published && (
-												<span className="text-sm text-muted-foreground">
+												<Badge
+													variant="secondary"
+													className=" text-black rounded-xl font-normal"
+												>
 													Draft
-												</span>
+												</Badge>
 											)}
 										</div>
 										<p className="text-sm text-muted-foreground">
@@ -137,9 +161,12 @@ export const FormsPage: React.FC<FormsPageProps> = ({ formsData, uuid }) => {
 												{form.title ?? "Untitled"}
 											</h2>
 											{!form.published && (
-												<span className="text-sm text-muted-foreground">
+												<Badge
+													variant="secondary"
+													className=" text-black rounded-xl font-normal"
+												>
 													Draft
-												</span>
+												</Badge>
 											)}
 										</div>
 										<p className="text-sm text-muted-foreground">
@@ -167,8 +194,12 @@ export const FormsPage: React.FC<FormsPageProps> = ({ formsData, uuid }) => {
 										</Button>
 									</DropdownMenuTrigger>
 									<DropdownMenuContent align="end">
-										<DropdownMenuItem>Edit</DropdownMenuItem>
+										<DropdownMenuItem>
+											<PencilLine />
+											Edit
+										</DropdownMenuItem>
 										<DropdownMenuItem onClick={() => openRenameModal(form)}>
+											<Tag />
 											Rename
 										</DropdownMenuItem>
 										<DropdownMenuItem
@@ -176,6 +207,7 @@ export const FormsPage: React.FC<FormsPageProps> = ({ formsData, uuid }) => {
 												duplicateForm(form.id);
 											}}
 										>
+											<Copy />
 											Duplicate
 										</DropdownMenuItem>
 										<DropdownMenuItem
@@ -184,6 +216,7 @@ export const FormsPage: React.FC<FormsPageProps> = ({ formsData, uuid }) => {
 												deleteForm(form.id);
 											}}
 										>
+											<Trash2 />
 											Delete
 										</DropdownMenuItem>
 									</DropdownMenuContent>
@@ -194,17 +227,11 @@ export const FormsPage: React.FC<FormsPageProps> = ({ formsData, uuid }) => {
 				</div>
 			</div>
 			<Dialog open={renameModalOpen} onOpenChange={setRenameModalOpen}>
-				<DialogContent className="max-w-md mx-auto">
+				<DialogContent className="max-w-md">
 					<DialogHeader>
-						<DialogTitle>Rename this form</DialogTitle>
-						<DialogClose asChild>
-							<button
-								className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none"
-								onClick={closeRenameModal}
-							>
-								<X className="h-4 w-4" />
-							</button>
-						</DialogClose>
+						<DialogTitle className="text-2xl font-semibold">
+							Rename this form
+						</DialogTitle>
 					</DialogHeader>
 					<div className="mt-2">
 						<label htmlFor="rename-input" className="block font-semibold mb-2">
@@ -218,12 +245,16 @@ export const FormsPage: React.FC<FormsPageProps> = ({ formsData, uuid }) => {
 							placeholder="Enter form name"
 							autoFocus
 						/>
-						<Button className="w-full" onClick={handleRename} disabled={!renameInput.trim()}>
+						<Button
+							className="bg-blue-600 hover:bg-blue-700 text-white"
+							onClick={handleRename}
+							disabled={!renameInput.trim()}
+						>
 							Complete
 						</Button>
 					</div>
 				</DialogContent>
 			</Dialog>
-		</>
+		</div>
 	);
 };

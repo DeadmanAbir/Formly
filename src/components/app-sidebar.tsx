@@ -1,12 +1,5 @@
 "use client";
-import {
-	Calendar,
-	Home,
-	Inbox,
-	PanelLeftClose,
-	Search,
-	Settings,
-} from "lucide-react";
+import { Home, PanelLeftClose, Search, Settings } from "lucide-react";
 
 import {
 	Sidebar,
@@ -29,7 +22,6 @@ import {
 	TooltipTrigger,
 } from "./ui/tooltip";
 
-// Menu items.
 const items = [
 	{
 		title: "Home",
@@ -37,20 +29,11 @@ const items = [
 		icon: Home,
 	},
 	{
-		title: "Inbox",
-		url: "#",
-		icon: Inbox,
-	},
-	{
-		title: "Calendar",
-		url: "#",
-		icon: Calendar,
-	},
-	{
 		title: "Search",
 		url: "#",
 		icon: Search,
 	},
+
 	{
 		title: "Settings",
 		url: "/settings",
@@ -65,7 +48,9 @@ export function AppSidebar() {
 			<SidebarContent>
 				<SidebarGroup>
 					<div className="flex items-center justify-between">
-						<SidebarGroupLabel>Application</SidebarGroupLabel>
+						<SidebarGroupLabel className="text-lg font-semibold text-black-600">
+							Formly
+						</SidebarGroupLabel>
 						<TooltipProvider>
 							<Tooltip>
 								<TooltipTrigger asChild>
@@ -87,7 +72,7 @@ export function AppSidebar() {
 					<SidebarGroupContent>
 						<SidebarMenu className="mt-2">
 							{items.map((item) => (
-								<SidebarMenuItem key={item.title}>
+								<SidebarMenuItem key={item.title} className="font-semibold">
 									<SidebarMenuButton asChild>
 										<a href={item.url}>
 											<item.icon />

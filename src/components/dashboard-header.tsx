@@ -1,7 +1,6 @@
 "use client";
 import { PanelRightClose, Search, Settings } from "lucide-react";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "./ui/sidebar";
 import {
@@ -15,6 +14,7 @@ export const DashboardHeader = () => {
 	const pathname = usePathname();
 	const isEditPage = pathname.split("/").pop() === "edit";
 	const { toggleSidebar, open } = useSidebar();
+
 	if (isEditPage) {
 		return null;
 	}
@@ -50,7 +50,7 @@ export const DashboardHeader = () => {
 					<Search />
 					Search
 				</Button>
-				<Link href="/dashboard">
+				<Link href="/settings">
 					<Settings size={20} className="mr-2" />
 				</Link>
 			</div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { saveToStorage } from "@/lib/helper";
 import { insertFormFn } from "@/lib/tanstack-query/mutation";
 import { Settings, FileClock } from "lucide-react";
 
@@ -44,7 +43,9 @@ export function FormHeader({
 			<div className="flex items-center gap-4">
 				<Button
 					variant="ghost"
-					className={`text-sm text-muted-foreground relative transition-all duration-300 ${draftSaved ? 'animate-pulse text-blue-600' : ''}`}
+					className={`text-sm text-muted-foreground relative transition-all duration-300 ${
+						draftSaved ? "animate-pulse text-blue-600" : ""
+					}`}
 					style={{ minWidth: 80 }}
 				>
 					{draftSaved ? (

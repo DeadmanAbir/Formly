@@ -4,8 +4,7 @@ import { Card, CardContent } from "../ui/card";
 const FormsOptions = () => {
 	return (
 		<>
-			{/* Quick Actions */}
-			<div className="flex flex-col space-y-4">
+			<div className="flex flex-col space-y-8">
 				<Button variant="outline" className="justify-start text-gray-600">
 					<span className="mr-2">⌘</span> Press Enter to start from scratch
 				</Button>

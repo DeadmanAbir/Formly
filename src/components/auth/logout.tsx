@@ -2,6 +2,7 @@
 import { authClient } from "@/lib/auth-client";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import { Radiation } from "lucide-react";
 
 const Logout = () => {
 	const router = useRouter();
@@ -9,7 +10,7 @@ const Logout = () => {
 	return (
 		<Button
 			variant="ghost"
-			className="w-full text-left flex items-start justify-start"
+			className="w-full text-left flex items-start justify-start text-red-600 font-semibold pl-2 hover:text-red-700"
 			onClick={async () => {
 				await authClient.signOut({
 					fetchOptions: {
@@ -24,6 +25,7 @@ const Logout = () => {
 				});
 			}}
 		>
+			<Radiation />
 			Logout
 		</Button>
 	);
