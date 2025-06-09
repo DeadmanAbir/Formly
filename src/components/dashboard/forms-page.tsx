@@ -107,7 +107,7 @@ export const FormsPage: React.FC<FormsPageProps> = ({ formsData, uuid }) => {
 					<div className="flex items-center justify-between px-4">
 						<h1 className="text-2xl font-bold">Home</h1>
 						<div className="flex items-center gap-2">
-							<Button variant="ghost">
+							<Button variant="ghost" disabled={true}>
 								<FolderPlus />
 								New workspace
 							</Button>

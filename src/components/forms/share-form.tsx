@@ -12,7 +12,7 @@ import { Submissions } from "./submissions";
 
 export default function ShareForm({ show }: { show: boolean }) {
 	const pathname = usePathname();
-
+	const [value, setValue] = useState<string>("summary");
 	const [url, setUrl] = useState("");
 
 	useEffect(() => {
@@ -30,43 +30,77 @@ export default function ShareForm({ show }: { show: boolean }) {
 	}
 
 	return (
-		<div className="flex justify-center items-center  ">
-			<div className="container max-w-6xl pt-10">
-				<Tabs defaultValue="share" className="w-full">
-					<TabsList className="w-full max-w-[600px] grid grid-cols-5">
-						<TabsTrigger value="summary">Summary</TabsTrigger>
-						<TabsTrigger value="submissions">Submissions</TabsTrigger>
-						<TabsTrigger value="share">Share</TabsTrigger>
-						<TabsTrigger value="integrations">Integrations</TabsTrigger>
-						<TabsTrigger value="settings">Settings</TabsTrigger>
-					</TabsList>
+		<div className={`flex flex-col min-h-[calc(100vh-40px)] pt-10 `}>
+			<Tabs
+				// defaultValue="summary"
+				className="flex flex-col flex-1 w-full h-full"
+				onValueChange={setValue}
+				value={value}
+			>
+				<TabsList className="w-full flex border-b bg-transparent p-0">
+					<TabsTrigger
+						value="summary"
+						className="flex-1 text-sm font-medium px-4 py-2 bg-white rounded-none border-b-2 border-transparent data-[state=active]:border-black data-[state=active]:font-bold data-[state=active]:text-black  "
+					>
+						Summary
+					</TabsTrigger>
+					<TabsTrigger
+						value="submissions"
+						className="flex-1 text-sm font-medium px-4 py-2 bg-transparent rounded-none border-b-2 border-transparent data-[state=active]:border-black data-[state=active]:font-bold data-[state=active]:text-black data-[state=inactive]:text-gray-500 focus:outline-none"
+					>
+						Submissions
+					</TabsTrigger>
+					<TabsTrigger
+						value="share"
+						className="flex-1 text-sm font-medium px-4 py-2 bg-transparent rounded-none border-b-2 border-transparent data-[state=active]:border-black data-[state=active]:font-bold data-[state=active]:text-black data-[state=inactive]:text-gray-500 focus:outline-none"
+					>
+						Share
+					</TabsTrigger>
+					<TabsTrigger
+						value="integrations"
+						className="flex-1 text-sm font-medium px-4 py-2 bg-transparent rounded-none border-b-2 border-transparent data-[state=active]:border-black data-[state=active]:font-bold data-[state=active]:text-black data-[state=inactive]:text-gray-500 focus:outline-none"
+					>
+						Integrations
+					</TabsTrigger>
+					<TabsTrigger
+						value="settings"
+						className="flex-1 text-sm font-medium px-4 py-2 bg-transparent rounded-none border-b-2 border-transparent data-[state=active]:border-black data-[state=active]:font-bold data-[state=active]:text-black data-[state=inactive]:text-gray-500 focus:outline-none"
+					>
+						Settings
+					</TabsTrigger>
+				</TabsList>
 
-					<TabsContent value="share" className="mt-8">
-						<ShareComponent
-							placeholderUrl={`${url}/r/${
-								pathname.split("/").slice(-2, -1)[0]
-							}`}
-						/>
-					</TabsContent>
+				<TabsContent value="share" className="mt-8">
+					<ShareComponent
+						placeholderUrl={`${url}/r/${pathname.split("/").slice(-2, -1)[0]}`}
+					/>
+				</TabsContent>
 
-					<TabsContent value="integrations" className="mt-8">
-						<Integrations />
-					</TabsContent>
-					<TabsContent value="submissions" className="mt-8">
-						<Submissions
-							submissions={submissionData?.data}
-							isPending={isPending}
-						/>
-					</TabsContent>
-					<TabsContent value="summary" className="mt-8">
-						<h1 className="text-2xl font-bold mb-8">Q&A Responses</h1>
-						<QADisplay data={submissionData?.data} isPending={isPending} />
-					</TabsContent>
-					<TabsContent value="settings" className="mt-8">
-						<FormSettings />
-					</TabsContent>
-				</Tabs>
-			</div>
+				<TabsContent value="integrations" className="mt-8">
+					<Integrations />
+				</TabsContent>
+
+				<TabsContent value="submissions" className="flex flex-col flex-1 ">
+					<Submissions
+						submissions={submissionData?.data}
+						isPending={isPending}
+						changeTab={setValue}
+					/>
+				</TabsContent>
+
+				<TabsContent value="summary" className="flex flex-col flex-1">
+					<QADisplay
+						data={submissionData?.data}
+						isPending={isPending}
+						changeTab={setValue}
+						className="flex-1 flex items-center justify-center"
+					/>
+				</TabsContent>
+
+				<TabsContent value="settings" className="mt-8">
+					<FormSettings />
+				</TabsContent>
+			</Tabs>
 		</div>
 	);
 }

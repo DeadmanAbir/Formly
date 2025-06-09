@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/table";
 import { parseSubmission } from "@/lib/helper";
 import { inputTypeIcons } from "../blocks/input-block";
+import { Package2 } from "lucide-react";
+import { Button } from "../ui/button";
 
 interface FormSubmission {
 	submittedAt: string;
@@ -26,9 +28,14 @@ interface ParsedSubmission {
 interface SubmissionsProps {
 	submissions: string;
 	isPending: boolean;
+	changeTab: (value: string) => void;
 }
 
-export const Submissions = ({ submissions, isPending }: SubmissionsProps) => {
+export const Submissions = ({
+	submissions,
+	isPending,
+	changeTab,
+}: SubmissionsProps) => {
 	if (isPending) return <div>Loading...</div>;
 
 	const questions = parseSubmission(isPending ? "" : submissions ?? "");
@@ -55,6 +62,31 @@ export const Submissions = ({ submissions, isPending }: SubmissionsProps) => {
 	const sortedSubmissions = allSubmissions.sort(
 		(a, b) => new Date(b).getTime() - new Date(a).getTime()
 	);
+
+	if (sortedSubmissions.length === 0) {
+		return (
+			<div className="flex flex-1 h-full  flex-col items-center justify-center py-10">
+				<Package2 size={60} className="text-gray-300" />
+				<div className="flex flex-col items-center justify-center py-10 space-y-4">
+					<p className="text-black font-bold text-lg">
+						No completed submissions yet
+					</p>
+					<p className="text-gray-400 ">
+						Your form is published and ready to be shared with the world!
+					</p>
+					<Button
+						variant="default"
+						className="bg-blue-600 hover:bg-blue-700"
+						onClick={() => {
+							changeTab("share");
+						}}
+					>
+						Share
+					</Button>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="space-y-4">
