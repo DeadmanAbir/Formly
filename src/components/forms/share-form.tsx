@@ -10,12 +10,21 @@ import ShareComponent from "./share-component";
 import { FormSettings } from "./form-settings";
 import { Submissions } from "./submissions";
 import { Separator } from "../ui/separator";
+import { Button } from "../ui/button";
+import { Check, Link, PencilLine } from "lucide-react";
+import { handleCopy } from "@/lib/helper";
 
-export default function ShareForm({ show }: { show: boolean }) {
+export default function ShareForm({
+	show,
+	data,
+}: {
+	show: boolean;
+	data?: string;
+}) {
 	const pathname = usePathname();
-	const [value, setValue] = useState<string>("summary");
+	const [value, setValue] = useState<string>("share");
 	const [url, setUrl] = useState("");
-
+	const [copied, setCopied] = useState(false);
 	useEffect(() => {
 		if (typeof window !== "undefined") {
 			setUrl(window.location.origin);
@@ -29,9 +38,34 @@ export default function ShareForm({ show }: { show: boolean }) {
 	if (!show) {
 		notFound();
 	}
+	const parsedData = JSON.parse(data!);
+	const shareUrl = `${url}/r/${pathname.split("/").slice(-2, -1)[0]}`;
 
 	return (
 		<div className={`flex flex-col min-h-[calc(100vh-40px)] pt-10 `}>
+			<div className=" flex flex-row justify-between px-4 pb-4">
+				<h1 className="text-3xl font-extrabold ">
+					{parsedData.title ?? "Untitled"}
+				</h1>
+				<div className="flex gap-4">
+					<Button
+						variant="ghost"
+						className="p-2"
+						onClick={() => handleCopy(shareUrl, setCopied)}
+					>
+						{copied ? (
+							<Check className="h-4 w-4" />
+						) : (
+							<Link className="cursor-pointer" />
+						)}
+					</Button>
+
+					<Button className="bg-blue-600">
+						<PencilLine />
+						Edit
+					</Button>
+				</div>
+			</div>
 			<Tabs
 				// defaultValue="summary"
 				className="flex flex-col flex-1 w-full h-full "
@@ -72,9 +106,7 @@ export default function ShareForm({ show }: { show: boolean }) {
 				</TabsList>
 				<Separator />
 				<TabsContent value="share" className="mt-8">
-					<ShareComponent
-						placeholderUrl={`${url}/r/${pathname.split("/").slice(-2, -1)[0]}`}
-					/>
+					<ShareComponent placeholderUrl={shareUrl} />
 				</TabsContent>
 				<TabsContent value="integrations" className="mt-8">
 					<Integrations />
@@ -94,7 +126,7 @@ export default function ShareForm({ show }: { show: boolean }) {
 						className="flex-1 flex items-center justify-center"
 					/>
 				</TabsContent>
-				<TabsContent value="settings" className="mt-8">
+				<TabsContent value="settings">
 					<FormSettings />
 				</TabsContent>
 			</Tabs>

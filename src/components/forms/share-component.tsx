@@ -3,21 +3,10 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Check, Copy } from "lucide-react";
 import Image from "next/image";
+import { handleCopy } from "@/lib/helper";
 
 const ShareComponent = ({ placeholderUrl }: { placeholderUrl: string }) => {
 	const [copied, setCopied] = useState(false);
-	const handleCopy = () => {
-		const inputValue = placeholderUrl;
-		navigator.clipboard
-			.writeText(inputValue)
-			.then(() => {
-				setCopied(true);
-				setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
-			})
-			.catch((err) => {
-				console.error("Could not copy text: ", err);
-			});
-	};
 
 	return (
 		<div className="flex flex-col w-full max-w-lg pl-4">
@@ -34,7 +23,7 @@ const ShareComponent = ({ placeholderUrl }: { placeholderUrl: string }) => {
 					className="w-full rounded-md focus"
 				/>
 				<Button
-					onClick={handleCopy}
+					onClick={() => handleCopy(placeholderUrl, setCopied)}
 					className="ml-2 bg-black text-white hover:bg-zinc-800 flex gap-2 px-5"
 				>
 					{copied ? (

@@ -96,3 +96,19 @@ export function parseSubmission(input: string): {
 		return [];
 	}
 }
+
+export const handleCopy = (
+	placeholderUrl: string,
+	setCopied: (value: boolean) => void
+) => {
+	const inputValue = placeholderUrl;
+	navigator.clipboard
+		.writeText(inputValue)
+		.then(() => {
+			setCopied(true);
+			setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+		})
+		.catch((err) => {
+			console.error("Could not copy text: ", err);
+		});
+};

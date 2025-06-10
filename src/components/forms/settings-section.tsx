@@ -5,7 +5,7 @@ import { SettingItem } from "./setting-item";
 
 export function SettingsSection() {
 	return (
-		<div className="space-y-8">
+		<div className="space-y-8 px-4">
 			{/* General Section */}
 			<section className="space-y-6">
 				<h2 className="text-xl font-semibold text-gray-900">General</h2>
